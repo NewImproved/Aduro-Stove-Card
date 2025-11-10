@@ -27,9 +27,9 @@ class AduroStoveCard extends HTMLElement {
         
         /* Header Section */
         .header-section {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: var(--primary-color);
           padding: 20px;
-          color: white;
+          color: var(--text-primary-color);
         }
         
         .header-top {
@@ -66,7 +66,7 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .status-display {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(0, 0, 0, 0.15);
           backdrop-filter: blur(10px);
           border-radius: 12px;
           padding: 12px 16px;
@@ -85,7 +85,7 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .display-format {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(0, 0, 0, 0.15);
           backdrop-filter: blur(10px);
           border-radius: 12px;
           padding: 12px 16px;
@@ -110,10 +110,11 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .info-card {
-          background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+          background: var(--secondary-background-color);
           border-radius: 12px;
           padding: 12px;
           text-align: center;
+          border: 1px solid var(--divider-color);
         }
         
         .info-label {
@@ -150,7 +151,7 @@ class AduroStoveCard extends HTMLElement {
         .refill-count {
           font-size: 12px;
           color: var(--secondary-text-color);
-          background: var(--divider-color);
+          background: var(--secondary-background-color);
           padding: 4px 12px;
           border-radius: 12px;
         }
@@ -165,18 +166,18 @@ class AduroStoveCard extends HTMLElement {
         
         .pellet-fill {
           height: 100%;
-          background: linear-gradient(90deg, #4caf50, #8bc34a);
+          background: var(--primary-color);
           transition: width 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
+          color: var(--text-primary-color);
           font-weight: 700;
           font-size: 16px;
         }
         
         .pellet-fill.low {
-          background: linear-gradient(90deg, #f44336, #ff9800);
+          background: var(--error-color);
         }
         
         /* Control Buttons Section */
@@ -199,8 +200,8 @@ class AduroStoveCard extends HTMLElement {
           font-size: 14px;
           font-weight: 600;
           transition: all 0.2s;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
+          background: var(--primary-color);
+          color: var(--text-primary-color);
         }
         
         .control-btn:active {
@@ -208,13 +209,15 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .control-btn.toggle-btn {
-          background: var(--divider-color);
+          background: var(--secondary-background-color);
           color: var(--secondary-text-color);
+          border: 1px solid var(--divider-color);
         }
         
         .control-btn.toggle-btn.on {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
+          background: var(--primary-color);
+          color: var(--text-primary-color);
+          border: 1px solid var(--primary-color);
         }
         
         /* Adjusters Section */
@@ -223,7 +226,8 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .adjuster-card {
-          background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+          background: var(--card-background-color);
+          border: 1px solid var(--divider-color);
           border-radius: 12px;
           padding: 16px;
           margin-bottom: 12px;
@@ -243,28 +247,38 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .adjuster-value {
-          font-size: 20px;
-          font-weight: 700;
+          font-size: 16px;
+          font-weight: 600;
           color: var(--primary-color);
         }
         
         .adjuster-controls {
           display: grid;
-          grid-template-columns: 1fr auto 1fr;
+          grid-template-columns: auto 1fr auto;
           gap: 12px;
           align-items: center;
         }
         
         .adjuster-btn {
-          height: 44px;
-          border: none;
-          border-radius: 22px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          font-size: 24px;
+          width: 36px;
+          height: 36px;
+          border: 1px solid var(--divider-color);
+          border-radius: 8px;
+          background: var(--secondary-background-color);
+          color: var(--primary-text-color);
+          font-size: 20px;
           font-weight: bold;
           cursor: pointer;
           transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .adjuster-btn:hover {
+          background: var(--primary-color);
+          color: var(--text-primary-color);
+          border-color: var(--primary-color);
         }
         
         .adjuster-btn:active {
@@ -273,7 +287,7 @@ class AduroStoveCard extends HTMLElement {
         
         .adjuster-display {
           text-align: center;
-          font-size: 32px;
+          font-size: 28px;
           font-weight: 700;
           color: var(--primary-text-color);
         }
@@ -288,7 +302,7 @@ class AduroStoveCard extends HTMLElement {
         
         .action-btn {
           padding: 16px;
-          border: none;
+          border: 1px solid var(--divider-color);
           border-radius: 12px;
           font-size: 14px;
           font-weight: 600;
@@ -298,20 +312,18 @@ class AduroStoveCard extends HTMLElement {
           align-items: center;
           justify-content: center;
           gap: 8px;
+          background: var(--secondary-background-color);
+          color: var(--primary-text-color);
+        }
+        
+        .action-btn:hover {
+          background: var(--primary-color);
+          color: var(--text-primary-color);
+          border-color: var(--primary-color);
         }
         
         .action-btn:active {
           transform: scale(0.95);
-        }
-        
-        .action-btn.clean {
-          background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-          color: #333;
-        }
-        
-        .action-btn.refill {
-          background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-          color: #333;
         }
         
         ha-icon {
@@ -373,14 +385,6 @@ class AduroStoveCard extends HTMLElement {
             <ha-icon icon="mdi:sync"></ha-icon>
             <span>Toggle Mode</span>
           </button>
-          <button class="control-btn toggle-btn" id="auto-resume-btn">
-            <ha-icon icon="mdi:play-circle"></ha-icon>
-            <span>Auto Resume</span>
-          </button>
-          <button class="control-btn toggle-btn" id="auto-shutdown-btn">
-            <ha-icon icon="mdi:power-settings"></ha-icon>
-            <span>Auto Shutdown</span>
-          </button>
         </div>
         
         <!-- Heat Level Adjuster -->
@@ -412,13 +416,21 @@ class AduroStoveCard extends HTMLElement {
         
         <!-- Action Buttons -->
         <div class="action-section">
-          <button class="action-btn clean" id="clean-btn">
+          <button class="action-btn" id="clean-btn">
             <ha-icon icon="mdi:broom"></ha-icon>
             <span>Stove Cleaned</span>
           </button>
-          <button class="action-btn refill" id="refill-btn">
+          <button class="action-btn" id="refill-btn">
             <ha-icon icon="mdi:reload"></ha-icon>
             <span>Pellets Refilled</span>
+          </button>
+          <button class="control-btn toggle-btn" id="auto-resume-btn">
+            <ha-icon icon="mdi:play-circle"></ha-icon>
+            <span>Auto Resume</span>
+          </button>
+          <button class="control-btn toggle-btn" id="auto-shutdown-btn">
+            <ha-icon icon="mdi:power-settings"></ha-icon>
+            <span>Auto Shutdown</span>
           </button>
         </div>
       </div>
