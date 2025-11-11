@@ -490,14 +490,19 @@ class AduroStoveCard extends HTMLElement {
     // Heat level controls
     this.querySelector('#heat-up').addEventListener('click', () => {
       const entityId = this._getEntityId('heatlevel');
+      console.log('Heat up clicked, entity:', entityId);
       const currentEntity = this._hass.states[entityId];
+      console.log('Current entity:', currentEntity);
       if (currentEntity) {
         const currentValue = parseFloat(currentEntity.state);
         const newValue = Math.min(currentValue + 1, 3);
+        console.log('Setting heat level from', currentValue, 'to', newValue);
         this._hass.callService('number', 'set_value', { 
           entity_id: entityId,
           value: newValue
         });
+      } else {
+        console.error('Entity not found:', entityId);
       }
     });
 
