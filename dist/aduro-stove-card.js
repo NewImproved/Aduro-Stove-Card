@@ -440,9 +440,26 @@ class AduroStoveCard extends HTMLElement {
     this._setupEventListeners();
   }
 
-  _getEntityId(suffix) {
+  _getEntityId(suffix, domain = null) {
+    // Extract base name from entity (e.g., "sensor.aduro_h2" -> "aduro_h2")
     const baseEntity = this._config.entity;
-    return `${baseEntity}_${suffix}`;
+    const parts = baseEntity.split('.');
+    const baseName = parts.length > 1 ? parts[1] : parts[0];
+    
+    // Determine domain based on suffix if not provided
+    if (!domain) {
+      if (['power', 'auto_shutdown', 'auto_resume_wood'].includes(suffix)) {
+        domain = 'switch';
+      } else if (['heatlevel', 'temperature', 'pellet_capacity', 'notification_level', 'shutdown_level'].includes(suffix)) {
+        domain = 'number';
+      } else if (['toggle_mode', 'refill_pellets', 'clean_stove', 'resume_after_wood', 'force_auger'].includes(suffix)) {
+        domain = 'button';
+      } else {
+        domain = 'sensor';
+      }
+    }
+    
+    return `${domain}.${baseName}_${suffix}`;
   }
 
   _setupEventListeners() {
