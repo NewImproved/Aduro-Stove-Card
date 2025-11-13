@@ -522,25 +522,24 @@ class AduroStoveCard extends HTMLElement {
     });
 
     // Heat level controls
-    this.querySelector('#heat-up').addEventListener('click', () => {
+    const heatUpBtn = this.querySelector('#heat-up');
+    heatUpBtn.addEventListener('click', (e) => {
+      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('heatlevel');
-      console.log('Heat up clicked, entity:', entityId);
       const currentEntity = this._hass.states[entityId];
-      console.log('Current entity:', currentEntity);
       if (currentEntity) {
         const currentValue = parseFloat(currentEntity.state);
         const newValue = Math.min(currentValue + 1, 3);
-        console.log('Setting heat level from', currentValue, 'to', newValue);
         this._hass.callService('number', 'set_value', { 
           entity_id: entityId,
           value: newValue
         });
-      } else {
-        console.error('Entity not found:', entityId);
       }
     });
 
-    this.querySelector('#heat-down').addEventListener('click', () => {
+    const heatDownBtn = this.querySelector('#heat-down');
+    heatDownBtn.addEventListener('click', (e) => {
+      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('heatlevel');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
@@ -554,7 +553,9 @@ class AduroStoveCard extends HTMLElement {
     });
 
     // Temperature controls
-    this.querySelector('#temp-up').addEventListener('click', () => {
+    const tempUpBtn = this.querySelector('#temp-up');
+    tempUpBtn.addEventListener('click', (e) => {
+      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('temperature');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
@@ -581,7 +582,9 @@ class AduroStoveCard extends HTMLElement {
       }
     });
 
-    this.querySelector('#temp-down').addEventListener('click', () => {
+    const tempDownBtn = this.querySelector('#temp-down');
+    tempDownBtn.addEventListener('click', (e) => {
+      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('temperature');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
