@@ -6,7 +6,7 @@
 
 A custom Lovelace card for controlling Aduro Hybrid Stoves in Home Assistant.
 
-![Aduro Stove Card](screenshot.png)
+![Aduro Stove Card](Aduro_stove_card.png)
 
 ## Features
 
