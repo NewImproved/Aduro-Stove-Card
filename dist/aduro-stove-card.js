@@ -33,9 +33,9 @@ class AduroStoveCard extends HTMLElement {
         
         /* Header Section */
         .header-section {
-          background: var(--primary-color);
+          background: white;
           padding: 20px;
-          color: var(--text-primary-color);
+          color: #333;
         }
         
         .header-top {
@@ -60,6 +60,7 @@ class AduroStoveCard extends HTMLElement {
           width: 28px;
           height: 28px;
           animation: spin 2s linear infinite;
+          transform-origin: center center;
         }
         
         @keyframes spin {
@@ -72,7 +73,7 @@ class AduroStoveCard extends HTMLElement {
         }
         
         .status-display {
-          background: rgba(0, 0, 0, 0.15);
+          background: rgba(0, 0, 0, 0.05);
           backdrop-filter: blur(10px);
           border-radius: 12px;
           padding: 12px 16px;
@@ -83,27 +84,31 @@ class AduroStoveCard extends HTMLElement {
           font-size: 18px;
           font-weight: 600;
           margin-bottom: 4px;
+          color: #333;
         }
         
         .status-sub {
           font-size: 14px;
-          opacity: 0.9;
+          opacity: 0.7;
+          color: #333;
         }
         
         .display-format {
-          background: rgba(0, 0, 0, 0.15);
+          background: rgba(0, 0, 0, 0.05);
           backdrop-filter: blur(10px);
           border-radius: 12px;
           padding: 12px 16px;
-          text-align: center;
           font-size: 20px;
           font-weight: 600;
+          color: #333;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
         
         .display-updating {
           font-size: 12px;
-          opacity: 0.9;
-          margin-top: 4px;
+          opacity: 0.7;
         }
         
         /* Info Cards Section */
@@ -200,14 +205,14 @@ class AduroStoveCard extends HTMLElement {
           justify-content: center;
           gap: 8px;
           padding: 14px;
-          border: none;
+          border: 1px solid var(--divider-color);
           border-radius: 12px;
           cursor: pointer;
           font-size: 14px;
           font-weight: 600;
           transition: all 0.2s;
-          background: var(--primary-color);
-          color: var(--text-primary-color);
+          background: var(--secondary-background-color);
+          color: var(--primary-text-color);
         }
         
         .control-btn:active {
@@ -229,31 +234,33 @@ class AduroStoveCard extends HTMLElement {
         /* Adjusters Section */
         .adjusters-section {
           padding: 0 16px 16px 16px;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
         }
         
         .adjuster-card {
           background: var(--card-background-color);
           border: 1px solid var(--divider-color);
           border-radius: 12px;
-          padding: 16px;
-          margin-bottom: 12px;
+          padding: 12px;
         }
         
         .adjuster-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 12px;
+          margin-bottom: 8px;
         }
         
         .adjuster-label {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 500;
           color: var(--primary-text-color);
         }
         
         .adjuster-value {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
           color: var(--primary-color);
         }
@@ -261,18 +268,18 @@ class AduroStoveCard extends HTMLElement {
         .adjuster-controls {
           display: grid;
           grid-template-columns: auto 1fr auto;
-          gap: 12px;
+          gap: 8px;
           align-items: center;
         }
         
         .adjuster-btn {
-          width: 36px;
-          height: 36px;
+          width: 32px;
+          height: 32px;
           border: 1px solid var(--divider-color);
           border-radius: 8px;
           background: var(--secondary-background-color);
           color: var(--primary-text-color);
-          font-size: 20px;
+          font-size: 18px;
           font-weight: bold;
           cursor: pointer;
           transition: transform 0.2s;
@@ -287,7 +294,7 @@ class AduroStoveCard extends HTMLElement {
         
         .adjuster-display {
           text-align: center;
-          font-size: 28px;
+          font-size: 20px;
           font-weight: 700;
           color: var(--primary-text-color);
         }
@@ -348,7 +355,7 @@ class AduroStoveCard extends HTMLElement {
           
           <div class="display-format">
             <div id="display-format">-</div>
-            <div class="display-updating hidden" id="updating-text">Updating stove settings...</div>
+            <div class="display-updating hidden" id="updating-text">Updating...</div>
           </div>
         </div>
         
@@ -724,13 +731,6 @@ class AduroStoveCard extends HTMLElement {
     if (heatLevelEntity) {
       const level = parseInt(heatLevelEntity.state);
       this.querySelector('#heat-level-value').textContent = level;
-      
-      // Get display name from attributes if available
-      if (heatLevelEntity.attributes && heatLevelEntity.attributes.display) {
-        this.querySelector('#heat-level-display').textContent = heatLevelEntity.attributes.display;
-      } else {
-        this.querySelector('#heat-level-display').textContent = `Level ${level}`;
-      }
     }
 
     // Update temperature
