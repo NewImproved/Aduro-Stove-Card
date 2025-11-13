@@ -291,6 +291,15 @@ class AduroStoveCard extends HTMLElement {
           transform: scale(0.9);
         }
         
+        /* Prevent stuck hover state on mobile */
+        @media (hover: none) {
+          .adjuster-btn:hover {
+            background: var(--secondary-background-color);
+            color: var(--primary-text-color);
+            border-color: var(--divider-color);
+          }
+        }
+        
         .adjuster-display {
           text-align: center;
           font-size: 28px;
@@ -523,8 +532,11 @@ class AduroStoveCard extends HTMLElement {
 
     // Heat level controls
     const heatUpBtn = this.querySelector('#heat-up');
+    heatUpBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.currentTarget.blur();
+    });
     heatUpBtn.addEventListener('click', (e) => {
-      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('heatlevel');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
@@ -535,11 +547,15 @@ class AduroStoveCard extends HTMLElement {
           value: newValue
         });
       }
+      e.currentTarget.blur();
     });
 
     const heatDownBtn = this.querySelector('#heat-down');
+    heatDownBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.currentTarget.blur();
+    });
     heatDownBtn.addEventListener('click', (e) => {
-      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('heatlevel');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
@@ -550,12 +566,16 @@ class AduroStoveCard extends HTMLElement {
           value: newValue
         });
       }
+      e.currentTarget.blur();
     });
 
     // Temperature controls
     const tempUpBtn = this.querySelector('#temp-up');
+    tempUpBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.currentTarget.blur();
+    });
     tempUpBtn.addEventListener('click', (e) => {
-      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('temperature');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
@@ -580,11 +600,15 @@ class AduroStoveCard extends HTMLElement {
           this._updateContent();
         }, 5000);
       }
+      e.currentTarget.blur();
     });
 
     const tempDownBtn = this.querySelector('#temp-down');
+    tempDownBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.currentTarget.blur();
+    });
     tempDownBtn.addEventListener('click', (e) => {
-      e.currentTarget.blur(); // Remove focus after click
       const entityId = this._getEntityId('temperature');
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
@@ -609,6 +633,7 @@ class AduroStoveCard extends HTMLElement {
           this._updateContent();
         }, 5000);
       }
+      e.currentTarget.blur();
     });
 
     // Action buttons
