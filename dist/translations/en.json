@@ -1,0 +1,22 @@
+{
+  "card_title": "Aduro Stove",
+  "header_title": "Aduro Stove",
+  "info_label": "Smoke Temperature",
+  "pellets_left": "Pellets Left",
+  "refills": "refills",
+  "pellet_level": "Pellet Level",
+  "refills_since_cleaning": "refills since cleaning",
+  "updating_text": "Updating...",
+  "power": "Power",
+  "toggle_mode": "Toggle Mode",
+  "auto_resume": "Auto Resume",
+  "auto_shutdown": "Auto Shutdown",
+  "stove_cleaned": "Stove Cleaned",
+  "pellets_refilled": "Pellets Refilled",
+  "heat_level": "Heat Level",
+  "target_temperature": "Target Temperature",
+  "confirm_power_on": "Are you sure you want to turn ON the stove?",
+  "confirm_power_off": "Are you sure you want to turn OFF the stove?",
+  "confirm_turn_on": "Are you sure you want to turn ON the stove?",
+  "confirm_turn_off": "Are you sure you want to turn OFF the stove?"
+}

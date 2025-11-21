@@ -1,30 +1,92 @@
+const TRANSLATIONS_BASE = "/hacsfiles/Aduro-Stove-Card/translations";
+
 class AduroStoveCard extends HTMLElement {
   constructor() {
     super();
     this._pendingTempValue = null;
+    this._initialized = false;
+    this._translations = { en: {} };
+    this._lang = "en";
   }
 
   set hass(hass) {
     if (!this._initialized) {
-      this._initialize();
+      // store hass first so translation loader can use hass.language
+      this._hass = hass;
+      this._loadTranslations()
+        .then(() => {
+          this._initialize();
+          this._updateContent();
+        })
+        .catch((e) => {
+          console.error("Failed to load translations", e);
+          // fall back to initialize anyway
+          this._initialize();
+          this._updateContent();
+        });
+    } else {
+      this._hass = hass;
+      this._updateContent();
     }
-    
-    this._hass = hass;
-    this._updateContent();
   }
 
   setConfig(config) {
     if (!config.entity) {
-      throw new Error('Please define an entity');
+      throw new Error("Please define an entity");
     }
     this._config = config;
-    console.log('Card configured with entity:', config.entity);
+    console.log("Card configured with entity:", config.entity);
+  }
+
+  async _loadTranslations() {
+    try {
+      // Determine language — prefer Home Assistant language if available
+      const haLang =
+        this._hass && this._hass.language ? this._hass.language : null;
+      this._lang = (haLang || navigator.language || "en").split("-")[0];
+
+      // Always keep 'en' as fallback
+      const tryLang = this._lang || "en";
+
+      const enUrl = `${TRANSLATIONS_BASE}/en.json`;
+      const localUrl = `${TRANSLATIONS_BASE}/${tryLang}.json`;
+
+      // Fetch English + local (might be same as en)
+      const [enResp, localResp] = await Promise.all([
+        fetch(enUrl)
+          .then((r) => (r.ok ? r.json() : {}))
+          .catch(() => ({})),
+        fetch(localUrl)
+          .then((r) => (r.ok ? r.json() : {}))
+          .catch(() => ({})),
+      ]);
+
+      this._translations = { en: enResp || {}, [tryLang]: localResp || {} };
+      this._lang = tryLang;
+      console.info("Aduro Stove Card: translations loaded for", this._lang);
+    } catch (e) {
+      console.error("Aduro Stove Card: error loading translations", e);
+      this._translations = { en: {} };
+      this._lang = "en";
+    }
+  }
+
+  _t(key) {
+    // safe accessor: first try current language, then english, else key
+    return (
+      (this._translations[this._lang] && this._translations[this._lang][key]) ||
+      (this._translations.en && this._translations.en[key]) ||
+      key
+    );
   }
 
   _initialize() {
     this._initialized = true;
-    
-    const card = document.createElement('ha-card');
+
+    // use shadow root so styles do not leak
+    this.attachShadow({ mode: "open" });
+
+    const card = document.createElement("ha-card");
     card.innerHTML = `
       <style>
         .card-content {
@@ -32,11 +94,12 @@ class AduroStoveCard extends HTMLElement {
         }
         
         /* Header Section */
-        .header-section {
-          background: white;
-          padding: 20px;
-          color: #333;
-        }
+		.header-section {
+		  padding: 20px;
+		  color: var(--primary-text-color);
+		  border-radius: 16px; /* schöne abgerundete Ecken */
+		  margin-top: 16px; /* Abstand nach oben zu anderen Karten */
+		}
         
         .header-top {
           display: flex;
@@ -72,40 +135,36 @@ class AduroStoveCard extends HTMLElement {
           display: none;
         }
         
-        .status-display {
-          background: rgba(0, 0, 0, 0.05);
-          backdrop-filter: blur(10px);
-          border-radius: 12px;
-          padding: 12px 16px;
-          margin-bottom: 12px;
-        }
-        
         .status-main {
           font-size: 18px;
           font-weight: 600;
           margin-bottom: 4px;
-          color: #333;
+          color: var(--primary-text-color);
         }
         
         .status-sub {
           font-size: 14px;
           opacity: 0.7;
-          color: #333;
-        }
-        
-        .display-format {
-          background: rgba(0, 0, 0, 0.05);
-          backdrop-filter: blur(10px);
-          border-radius: 12px;
-          padding: 12px 16px;
-          font-size: 14px;
-          font-weight: 500;
-          color: #333;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        
+		  color: var(--secondary-text-color);
+        }     
+		
+		.status-display,
+		.display-format {
+		  background: var(--secondary-background-color);
+		  border: 1px solid var(--divider-color);
+		  padding: 12px 16px;
+		  border-radius: 12px;
+		  margin-bottom: 12px;
+		  color: var(--primary-text-color);
+		}
+		
+		.status-display {
+		  background: var(--secondary-background-color);
+		  border: 1px solid var(--divider-color);
+		  color: var(--primary-text-color);
+		  border-radius: 12px;
+		}
+        		
         .display-updating {
           font-size: 11px;
           opacity: 0.7;
@@ -120,14 +179,19 @@ class AduroStoveCard extends HTMLElement {
           background: var(--card-background-color);
         }
         
-        .info-card {
-          background: var(--secondary-background-color);
-          border-radius: 12px;
-          padding: 12px;
-          text-align: center;
-          border: 1px solid var(--divider-color);
-          position: relative;
-        }
+		.info-card {
+		  background: var(--secondary-background-color);
+		  border-radius: 12px;
+		  padding: 16px; /* etwas mehr für perfekte Balance */
+		  text-align: center;
+		  border: 1px solid var(--divider-color);
+		  position: relative;
+
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: center; 
+		  align-items: center;
+		}
         
         .info-label {
           font-size: 12px;
@@ -141,17 +205,17 @@ class AduroStoveCard extends HTMLElement {
           color: var(--primary-text-color);
         }
         
-        .refill-badge {
-          position: absolute;
-          bottom: 8px;
-          right: 8px;
-          font-size: 10px;
-          color: var(--secondary-text-color);
-          background: var(--card-background-color);
-          padding: 2px 6px;
-          border-radius: 8px;
-          border: 1px solid var(--divider-color);
-        }
+		.refill-badge {
+		  position: static;
+		  margin-top: 6px;
+		  font-size: 11px;
+		  color: var(--secondary-text-color);
+		  background: var(--secondary-background-color);
+		  padding: 2px 6px;
+		  border-radius: 8px;
+		  border: 1px solid var(--divider-color);
+		  display: inline-block;
+		}
         
         /* Pellet Section - Hidden */
         .pellet-section {
@@ -354,7 +418,7 @@ class AduroStoveCard extends HTMLElement {
         <!-- Header Section -->
         <div class="header-section">
           <div class="header-top">
-            <div class="header-title">Aduro Stove</div>
+            <div class="header-title">${this._t("header_title")}</div>
             <div class="status-icons">
               <ha-icon class="status-icon hidden" id="change-icon" icon="mdi:sync"></ha-icon>
             </div>
@@ -367,28 +431,34 @@ class AduroStoveCard extends HTMLElement {
           
           <div class="display-format">
             <div id="display-format">-</div>
-            <div class="display-updating hidden" id="updating-text">Updating...</div>
+            <div class="display-updating hidden" id="updating-text">${this._t(
+              "updating_text"
+            )}</div>
           </div>
         </div>
         
         <!-- Info Cards -->
         <div class="info-section">
           <div class="info-card">
-            <div class="info-label">Smoke Temperature</div>
+            <div class="info-label">${this._t("info_label")}</div>
             <div class="info-value" id="smoke-temp">-</div>
           </div>
           <div class="info-card">
-            <div class="info-label">Pellets Left</div>
+            <div class="info-label">${this._t("pellets_left")}</div>
             <div class="info-value" id="pellet-percent">-</div>
-            <div class="refill-badge" id="refill-counter">0 refills</div>
+            <div class="refill-badge" id="refill-counter">0 ${this._t(
+              "refills"
+            )}</div>
           </div>
         </div>
         
         <!-- Pellet Bar -->
         <div class="pellet-section">
           <div class="pellet-header">
-            <div class="pellet-label">Pellet Level</div>
-            <div class="refill-count" id="refill-counter">0 refills since cleaning</div>
+            <div class="pellet-label">${this._t("pellet_level")}</div>
+            <div class="refill-count" id="refill-counter">0 ${this._t(
+              "refills_since_cleaning"
+            )}</div>
           </div>
           <div class="pellet-bar">
             <div class="pellet-fill" id="pellet-fill">0%</div>
@@ -399,11 +469,11 @@ class AduroStoveCard extends HTMLElement {
         <div class="control-buttons">
           <button class="control-btn toggle-btn" id="power-btn">
             <ha-icon icon="mdi:power"></ha-icon>
-            <span>Power</span>
+            <span>${this._t("power")}</span>
           </button>
           <button class="control-btn" id="toggle-mode-btn">
             <ha-icon icon="mdi:sync"></ha-icon>
-            <span>Toggle Mode</span>
+            <span>${this._t("toggle_mode")}</span>
           </button>
         </div>
         
@@ -411,7 +481,7 @@ class AduroStoveCard extends HTMLElement {
         <div class="adjusters-section">
           <div class="adjuster-card">
             <div class="adjuster-header">
-              <div class="adjuster-label">Heat Level</div>
+              <div class="adjuster-label">${this._t("heat_level")}</div>
               <div class="adjuster-value" id="heat-level-display">-</div>
             </div>
             <div class="adjuster-controls">
@@ -424,7 +494,7 @@ class AduroStoveCard extends HTMLElement {
           <!-- Temperature Adjuster -->
           <div class="adjuster-card">
             <div class="adjuster-header">
-              <div class="adjuster-label">Target Temperature</div>
+              <div class="adjuster-label">${this._t("target_temperature")}</div>
             </div>
             <div class="adjuster-controls">
               <button class="adjuster-btn" id="temp-down">−</button>
@@ -438,163 +508,175 @@ class AduroStoveCard extends HTMLElement {
         <div class="action-section">
           <button class="action-btn" id="clean-btn">
             <ha-icon icon="mdi:broom"></ha-icon>
-            <span>Stove Cleaned</span>
+            <span>${this._t("stove_cleaned")}</span>
           </button>
           <button class="action-btn" id="refill-btn">
             <ha-icon icon="mdi:reload"></ha-icon>
-            <span>Pellets Refilled</span>
+            <span>${this._t("pellets_refilled")}</span>
           </button>
           <button class="control-btn toggle-btn" id="auto-resume-btn">
             <ha-icon icon="mdi:play-circle"></ha-icon>
-            <span>Auto Resume</span>
+            <span>${this._t("auto_resume")}</span>
           </button>
           <button class="control-btn toggle-btn" id="auto-shutdown-btn">
             <ha-icon icon="mdi:power-settings"></ha-icon>
-            <span>Auto Shutdown</span>
+            <span>${this._t("auto_shutdown")}</span>
           </button>
         </div>
       </div>
     `;
-    
-    this.appendChild(card);
+
+    // append to shadow root
+    this.shadowRoot.appendChild(card);
+
+    // setup listeners (use shadowRoot selectors)
     this._setupEventListeners();
   }
 
   _getEntityId(suffix, domain = null) {
     // Extract base name from entity (e.g., "sensor.aduro_h2" -> "aduro_h2")
     const baseEntity = this._config.entity;
-    const parts = baseEntity.split('.');
+    const parts = baseEntity.split(".");
     const baseName = parts.length > 1 ? parts[1] : parts[0];
-    
+
     // Map internal names to actual entity names
     const entityMap = {
       // Switches
-      'power': 'switch.power',
-      'auto_shutdown': 'switch.auto_shutdown_at_low_pellets',
-      'auto_resume_wood': 'switch.auto_resume_after_wood_mode',
-      
+      power: "switch.power",
+      auto_shutdown: "switch.auto_shutdown_at_low_pellets",
+      auto_resume_wood: "switch.auto_resume_after_wood_mode",
+
       // Numbers
-      'heatlevel': 'number.heat_level',
-      'temperature': 'number.target_temperature',
-      'pellet_capacity': 'number.pellet_capacity',
-      'notification_level': 'number.low_pellet_notification_level',
-      'shutdown_level': 'number.auto_shutdown_pellet_level',
-      
+      heatlevel: "number.heat_level",
+      temperature: "number.target_temperature",
+      pellet_capacity: "number.pellet_capacity",
+      notification_level: "number.low_pellet_notification_level",
+      shutdown_level: "number.auto_shutdown_pellet_level",
+
       // Buttons
-      'toggle_mode': 'button.toggle_mode',
-      'refill_pellets': 'button.refill_pellets',
-      'clean_stove': 'button.clean_stove',
-      'resume_after_wood': 'button.resume_after_wood_mode',
-      'force_auger': 'button.force_auger',
-      
+      toggle_mode: "button.toggle_mode",
+      refill_pellets: "button.refill_pellets",
+      clean_stove: "button.clean_stove",
+      resume_after_wood: "button.resume_after_wood_mode",
+      force_auger: "button.force_auger",
+
       // Sensors
-      'status_main': 'sensor.status_main',
-      'status_sub': 'sensor.status_sub',
-      'change_in_progress': 'sensor.change_in_progress',
-      'display_format': 'sensor.display_format',
-      'smoke_temp': 'sensor.smoke_temperature',
-      'pellet_percentage': 'sensor.pellet_percentage',
-      'refill_counter': 'sensor.refill_counter',
+      status_main: "sensor.status_main",
+      status_sub: "sensor.status_sub",
+      change_in_progress: "sensor.change_in_progress",
+      display_format: "sensor.display_format",
+      smoke_temp: "sensor.smoke_temperature",
+      pellet_percentage: "sensor.pellet_percentage",
+      refill_counter: "sensor.refill_counter",
     };
-    
+
     const mapped = entityMap[suffix];
     if (mapped) {
-      const [mappedDomain, mappedName] = mapped.split('.');
+      const [mappedDomain, mappedName] = mapped.split(".");
       return `${mappedDomain}.${baseName}_${mappedName}`;
     }
-    
+
     // Fallback for unmapped entities
     if (!domain) {
-      domain = 'sensor';
+      domain = "sensor";
     }
     return `${domain}.${baseName}_${suffix}`;
   }
 
   _setupEventListeners() {
     // Power button
-    this.querySelector('#power-btn').addEventListener('click', () => {
-      const entityId = this._getEntityId('power');
+    const powerBtn = this.shadowRoot.querySelector("#power-btn");
+    powerBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("power");
       const powerEntity = this._hass.states[entityId];
-      const isOn = powerEntity && powerEntity.state === 'on';
-      
-      const message = isOn 
-        ? 'Are you sure you want to turn OFF the stove?' 
-        : 'Are you sure you want to turn ON the stove?';
-      
+      const isOn = powerEntity && powerEntity.state === "on";
+
+      const message = isOn
+        ? this._t("confirm_turn_off")
+        : this._t("confirm_turn_on");
+
       if (confirm(message)) {
-        this._hass.callService('switch', 'toggle', { entity_id: entityId });
+        this._hass.callService("switch", "toggle", { entity_id: entityId });
       }
     });
 
     // Toggle mode button
-    this.querySelector('#toggle-mode-btn').addEventListener('click', () => {
-      const entityId = this._getEntityId('toggle_mode');
-      this._hass.callService('button', 'press', { entity_id: entityId });
+    const toggleBtn = this.shadowRoot.querySelector("#toggle-mode-btn");
+    toggleBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("toggle_mode");
+      this._hass.callService("button", "press", { entity_id: entityId });
     });
 
     // Auto resume button
-    this.querySelector('#auto-resume-btn').addEventListener('click', () => {
-      const entityId = this._getEntityId('auto_resume_wood');
-      this._hass.callService('switch', 'toggle', { entity_id: entityId });
+    const autoResumeBtn = this.shadowRoot.querySelector("#auto-resume-btn");
+    autoResumeBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("auto_resume_wood");
+      this._hass.callService("switch", "toggle", { entity_id: entityId });
     });
 
     // Auto shutdown button
-    this.querySelector('#auto-shutdown-btn').addEventListener('click', () => {
-      const entityId = this._getEntityId('auto_shutdown');
-      this._hass.callService('switch', 'toggle', { entity_id: entityId });
+    const autoShutdownBtn = this.shadowRoot.querySelector("#auto-shutdown-btn");
+    autoShutdownBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("auto_shutdown");
+      this._hass.callService("switch", "toggle", { entity_id: entityId });
     });
 
     // Heat level controls
-    const heatUpBtn = this.querySelector('#heat-up');
-    heatUpBtn.addEventListener('click', (e) => {
-      const entityId = this._getEntityId('heatlevel');
+    const heatUpBtn = this.shadowRoot.querySelector("#heat-up");
+    heatUpBtn.addEventListener("click", (e) => {
+      const entityId = this._getEntityId("heatlevel");
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
         const currentValue = parseFloat(currentEntity.state);
         const newValue = Math.min(currentValue + 1, 3);
-        this._hass.callService('number', 'set_value', { 
+        this._hass.callService("number", "set_value", {
           entity_id: entityId,
-          value: newValue
+          value: newValue,
         });
       }
       setTimeout(() => e.currentTarget.blur(), 100);
     });
 
-    const heatDownBtn = this.querySelector('#heat-down');
-    heatDownBtn.addEventListener('click', (e) => {
-      const entityId = this._getEntityId('heatlevel');
+    const heatDownBtn = this.shadowRoot.querySelector("#heat-down");
+    heatDownBtn.addEventListener("click", (e) => {
+      const entityId = this._getEntityId("heatlevel");
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
         const currentValue = parseFloat(currentEntity.state);
         const newValue = Math.max(currentValue - 1, 1);
-        this._hass.callService('number', 'set_value', { 
+        this._hass.callService("number", "set_value", {
           entity_id: entityId,
-          value: newValue
+          value: newValue,
         });
       }
       setTimeout(() => e.currentTarget.blur(), 100);
     });
 
     // Temperature controls
-    const tempUpBtn = this.querySelector('#temp-up');
-    tempUpBtn.addEventListener('click', (e) => {
-      const entityId = this._getEntityId('temperature');
+    const tempUpBtn = this.shadowRoot.querySelector("#temp-up");
+    tempUpBtn.addEventListener("click", (e) => {
+      const entityId = this._getEntityId("temperature");
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
         // Use pending value if available, otherwise use actual value
-        const currentValue = this._pendingTempValue !== null ? this._pendingTempValue : parseFloat(currentEntity.state);
+        const currentValue =
+          this._pendingTempValue !== null
+            ? this._pendingTempValue
+            : parseFloat(currentEntity.state);
         const newValue = Math.min(currentValue + 1, 35);
-        
+
         // Update display immediately
         this._pendingTempValue = newValue;
-        this.querySelector('#temp-value').textContent = `${newValue}°C`;
-        
+        this.shadowRoot.querySelector(
+          "#temp-value"
+        ).textContent = `${newValue}°C`;
+
         // Send command
-        this._hass.callService('number', 'set_value', { 
+        this._hass.callService("number", "set_value", {
           entity_id: entityId,
-          value: newValue
+          value: newValue,
         });
-        
+
         // Clear pending value after 5 seconds
         clearTimeout(this._tempTimeout);
         this._tempTimeout = setTimeout(() => {
@@ -605,25 +687,30 @@ class AduroStoveCard extends HTMLElement {
       setTimeout(() => e.currentTarget.blur(), 100);
     });
 
-    const tempDownBtn = this.querySelector('#temp-down');
-    tempDownBtn.addEventListener('click', (e) => {
-      const entityId = this._getEntityId('temperature');
+    const tempDownBtn = this.shadowRoot.querySelector("#temp-down");
+    tempDownBtn.addEventListener("click", (e) => {
+      const entityId = this._getEntityId("temperature");
       const currentEntity = this._hass.states[entityId];
       if (currentEntity) {
         // Use pending value if available, otherwise use actual value
-        const currentValue = this._pendingTempValue !== null ? this._pendingTempValue : parseFloat(currentEntity.state);
+        const currentValue =
+          this._pendingTempValue !== null
+            ? this._pendingTempValue
+            : parseFloat(currentEntity.state);
         const newValue = Math.max(currentValue - 1, 5);
-        
+
         // Update display immediately
         this._pendingTempValue = newValue;
-        this.querySelector('#temp-value').textContent = `${newValue}°C`;
-        
+        this.shadowRoot.querySelector(
+          "#temp-value"
+        ).textContent = `${newValue}°C`;
+
         // Send command
-        this._hass.callService('number', 'set_value', { 
+        this._hass.callService("number", "set_value", {
           entity_id: entityId,
-          value: newValue
+          value: newValue,
         });
-        
+
         // Clear pending value after 5 seconds
         clearTimeout(this._tempTimeout);
         this._tempTimeout = setTimeout(() => {
@@ -635,14 +722,16 @@ class AduroStoveCard extends HTMLElement {
     });
 
     // Action buttons
-    this.querySelector('#clean-btn').addEventListener('click', () => {
-      const entityId = this._getEntityId('clean_stove');
-      this._hass.callService('button', 'press', { entity_id: entityId });
+    const cleanBtn = this.shadowRoot.querySelector("#clean-btn");
+    cleanBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("clean_stove");
+      this._hass.callService("button", "press", { entity_id: entityId });
     });
 
-    this.querySelector('#refill-btn').addEventListener('click', () => {
-      const entityId = this._getEntityId('refill_pellets');
-      this._hass.callService('button', 'press', { entity_id: entityId });
+    const refillBtn = this.shadowRoot.querySelector("#refill-btn");
+    refillBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("refill_pellets");
+      this._hass.callService("button", "press", { entity_id: entityId });
     });
   }
 
@@ -651,116 +740,135 @@ class AduroStoveCard extends HTMLElement {
 
     // Debug: Log all available entities that match our pattern
     const baseEntity = this._config.entity;
-    const parts = baseEntity.split('.');
+    const parts = baseEntity.split(".");
     const baseName = parts.length > 1 ? parts[1] : parts[0];
-    
-    console.log('Looking for entities matching:', baseName);
-    const matchingEntities = Object.keys(this._hass.states).filter(e => e.includes(baseName));
-    console.log('All matching entities:', matchingEntities); // Show all
+
+    console.log("Looking for entities matching:", baseName);
+    const matchingEntities = Object.keys(this._hass.states).filter((e) =>
+      e.includes(baseName)
+    );
+    console.log("All matching entities:", matchingEntities); // Show all
 
     // Update status displays
-    const statusMainEntity = this._hass.states[this._getEntityId('status_main')];
+    const statusMainEntity =
+      this._hass.states[this._getEntityId("status_main")];
     if (statusMainEntity) {
-      this.querySelector('#status-main').textContent = statusMainEntity.state;
+      this.shadowRoot.querySelector("#status-main").textContent =
+        statusMainEntity.state;
     }
 
-    const statusSubEntity = this._hass.states[this._getEntityId('status_sub')];
+    const statusSubEntity = this._hass.states[this._getEntityId("status_sub")];
     if (statusSubEntity) {
-      this.querySelector('#status-sub').textContent = statusSubEntity.state;
+      this.shadowRoot.querySelector("#status-sub").textContent =
+        statusSubEntity.state;
     }
 
     // Update change in progress
-    const changeInProgressEntity = this._hass.states[this._getEntityId('change_in_progress')];
-    const changeIcon = this.querySelector('#change-icon');
-    const updatingText = this.querySelector('#updating-text');
-    
-    if (changeInProgressEntity && changeInProgressEntity.state === 'true') {
-      changeIcon.classList.remove('hidden');
-      updatingText.classList.remove('hidden');
+    const changeInProgressEntity =
+      this._hass.states[this._getEntityId("change_in_progress")];
+    const changeIcon = this.shadowRoot.querySelector("#change-icon");
+    const updatingText = this.shadowRoot.querySelector("#updating-text");
+
+    if (changeInProgressEntity && changeInProgressEntity.state === "true") {
+      changeIcon.classList.remove("hidden");
+      updatingText.classList.remove("hidden");
     } else {
-      changeIcon.classList.add('hidden');
-      updatingText.classList.add('hidden');
+      changeIcon.classList.add("hidden");
+      updatingText.classList.add("hidden");
     }
 
     // Update display format
-    const displayFormatEntity = this._hass.states[this._getEntityId('display_format')];
+    const displayFormatEntity =
+      this._hass.states[this._getEntityId("display_format")];
     if (displayFormatEntity) {
-      this.querySelector('#display-format').textContent = displayFormatEntity.state;
+      this.shadowRoot.querySelector("#display-format").textContent =
+        displayFormatEntity.state;
     }
 
     // Update smoke temperature
-    const smokeTempEntity = this._hass.states[this._getEntityId('smoke_temp')];
-    if (smokeTempEntity && smokeTempEntity.state !== 'unavailable') {
+    const smokeTempEntity = this._hass.states[this._getEntityId("smoke_temp")];
+    if (smokeTempEntity && smokeTempEntity.state !== "unavailable") {
       const temp = Math.round(parseFloat(smokeTempEntity.state));
-      this.querySelector('#smoke-temp').textContent = `${temp}°C`;
+      this.shadowRoot.querySelector("#smoke-temp").textContent = `${temp}°C`;
     } else {
-      this.querySelector('#smoke-temp').textContent = 'N/A';
+      this.shadowRoot.querySelector("#smoke-temp").textContent = "N/A";
     }
 
     // Update pellet percentage
-    const pelletEntity = this._hass.states[this._getEntityId('pellet_percentage')];
+    const pelletEntity =
+      this._hass.states[this._getEntityId("pellet_percentage")];
     if (pelletEntity) {
       const percentage = parseInt(pelletEntity.state) || 0;
-      this.querySelector('#pellet-percent').textContent = `${percentage}%`;
-      
-      const pelletFill = this.querySelector('#pellet-fill');
+      this.shadowRoot.querySelector(
+        "#pellet-percent"
+      ).textContent = `${percentage}%`;
+
+      const pelletFill = this.shadowRoot.querySelector("#pellet-fill");
       pelletFill.style.width = `${percentage}%`;
       pelletFill.textContent = `${percentage}%`;
-      
+
       if (percentage <= 20) {
-        pelletFill.classList.add('low');
+        pelletFill.classList.add("low");
       } else {
-        pelletFill.classList.remove('low');
+        pelletFill.classList.remove("low");
       }
     }
 
     // Update refill counter
-    const refillCounterEntity = this._hass.states[this._getEntityId('refill_counter')];
+    const refillCounterEntity =
+      this._hass.states[this._getEntityId("refill_counter")];
     if (refillCounterEntity) {
       const count = parseInt(refillCounterEntity.state) || 0;
-      this.querySelector('#refill-counter').textContent = `${count} refills`;
+      this.shadowRoot.querySelector(
+        "#refill-counter"
+      ).textContent = `${count} ${this._t("refills")}`;
     }
 
     // Update power button
-    const powerEntity = this._hass.states[this._getEntityId('power')];
-    const powerBtn = this.querySelector('#power-btn');
-    if (powerEntity && powerEntity.state === 'on') {
-      powerBtn.classList.add('on');
+    const powerEntity = this._hass.states[this._getEntityId("power")];
+    const powerBtn = this.shadowRoot.querySelector("#power-btn");
+    if (powerEntity && powerEntity.state === "on") {
+      powerBtn.classList.add("on");
     } else {
-      powerBtn.classList.remove('on');
+      powerBtn.classList.remove("on");
     }
 
     // Update auto resume button
-    const autoResumeEntity = this._hass.states[this._getEntityId('auto_resume_wood')];
-    const autoResumeBtn = this.querySelector('#auto-resume-btn');
-    if (autoResumeEntity && autoResumeEntity.state === 'on') {
-      autoResumeBtn.classList.add('on');
+    const autoResumeEntity =
+      this._hass.states[this._getEntityId("auto_resume_wood")];
+    const autoResumeBtn = this.shadowRoot.querySelector("#auto-resume-btn");
+    if (autoResumeEntity && autoResumeEntity.state === "on") {
+      autoResumeBtn.classList.add("on");
     } else {
-      autoResumeBtn.classList.remove('on');
+      autoResumeBtn.classList.remove("on");
     }
 
     // Update auto shutdown button
-    const autoShutdownEntity = this._hass.states[this._getEntityId('auto_shutdown')];
-    const autoShutdownBtn = this.querySelector('#auto-shutdown-btn');
-    if (autoShutdownEntity && autoShutdownEntity.state === 'on') {
-      autoShutdownBtn.classList.add('on');
+    const autoShutdownEntity =
+      this._hass.states[this._getEntityId("auto_shutdown")];
+    const autoShutdownBtn = this.shadowRoot.querySelector("#auto-shutdown-btn");
+    if (autoShutdownEntity && autoShutdownEntity.state === "on") {
+      autoShutdownBtn.classList.add("on");
     } else {
-      autoShutdownBtn.classList.remove('on');
+      autoShutdownBtn.classList.remove("on");
     }
 
     // Update heat level
-    const heatLevelEntity = this._hass.states[this._getEntityId('heatlevel')];
+    const heatLevelEntity = this._hass.states[this._getEntityId("heatlevel")];
     if (heatLevelEntity) {
       const level = parseInt(heatLevelEntity.state);
-      this.querySelector('#heat-level-value').textContent = level;
+      this.shadowRoot.querySelector("#heat-level-value").textContent = level;
     }
 
     // Update temperature
-    const tempEntity = this._hass.states[this._getEntityId('temperature')];
+    const tempEntity = this._hass.states[this._getEntityId("temperature")];
     if (tempEntity) {
       // Use pending value if available, otherwise use actual value
-      const temp = this._pendingTempValue !== null ? this._pendingTempValue : parseFloat(tempEntity.state);
-      this.querySelector('#temp-value').textContent = `${temp}°C`;
+      const temp =
+        this._pendingTempValue !== null
+          ? this._pendingTempValue
+          : parseFloat(tempEntity.state);
+      this.shadowRoot.querySelector("#temp-value").textContent = `${temp}°C`;
     }
   }
 
@@ -769,11 +877,11 @@ class AduroStoveCard extends HTMLElement {
   }
 }
 
-customElements.define('aduro-stove-card', AduroStoveCard);
+customElements.define("aduro-stove-card", AduroStoveCard);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type: 'aduro-stove-card',
-  name: 'Aduro Stove Card',
-  description: 'A custom card for controlling Aduro stoves'
+  type: "aduro-stove-card",
+  name: "Aduro Stove Card",
+  description: "A custom card for controlling Aduro stoves",
 });

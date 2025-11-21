@@ -1,0 +1,19 @@
+{
+  "header_title": "Aduro Ofen",
+  "updating_text": "Aktualisiere...",
+  "info_label": "Rauchtemperatur",
+  "pellets_left": "Pellets übrig",
+  "refills": "Nachfüllungen",
+  "pellet_level": "Füllstand Pellets",
+  "refills_since_cleaning": "Nachfüllungen seit Reinigung",
+  "power": "Ein/Aus",
+  "toggle_mode": "Modus wechseln",
+  "heat_level": "Leistungsstufe",
+  "target_temperature": "Zieltemperatur",
+  "stove_cleaned": "Ofen gereinigt",
+  "pellets_refilled": "Pellets nachgefüllt",
+  "auto_resume": "Auto Fortsetzen",
+  "auto_shutdown": "Automatische Abschaltung",
+  "confirm_turn_on": "Möchtest du den Ofen einschalten?",
+  "confirm_turn_off": "Möchtest du den Ofen ausschalten?"
+}
