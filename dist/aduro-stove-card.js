@@ -36,6 +36,19 @@ class AduroStoveCard extends HTMLElement {
     }
     this._config = config;
     console.log("Card configured with entity:", config.entity);
+    
+    // If already initialized, update the title
+    if (this._initialized) {
+      this._updateTitle();
+    }
+  }
+	
+  setConfig(config) {
+    if (!config.entity) {
+      throw new Error("Please define an entity");
+    }
+    this._config = config;
+    console.log("Card configured with entity:", config.entity);
   }
 
   async _loadTranslations() {
@@ -80,6 +93,18 @@ class AduroStoveCard extends HTMLElement {
     );
   }
 
+  _getTitle() {
+    // Return custom title if provided, otherwise use translation
+    return this._config.title || this._t("header_title");
+  }
+
+  _updateTitle() {
+    const titleElement = this.shadowRoot.querySelector(".header-title");
+    if (titleElement) {
+      titleElement.textContent = this._getTitle();
+    }
+  }
+	
   _initialize() {
     this._initialized = true;
 
@@ -418,7 +443,7 @@ class AduroStoveCard extends HTMLElement {
         <!-- Header Section -->
         <div class="header-section">
           <div class="header-top">
-            <div class="header-title">${this._t("header_title")}</div>
+            <div class="header-title">${this._getTitle()}</div>
             <div class="status-icons">
               <ha-icon class="status-icon hidden" id="change-icon" icon="mdi:sync"></ha-icon>
             </div>
