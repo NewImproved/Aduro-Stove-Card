@@ -234,10 +234,9 @@ class AduroStoveCard extends HTMLElement {
 		  display: inline-block;
 		}
 
-        /* Carbon Monoxide Bar */
-        .co-bar-container {
-          margin-top: 8px;
-          width: 100%;
+        /* Carbon Monoxide Bar Section */
+        .co-section {
+          padding: 0 16px 16px 16px;
         }
 
         .co-bar-wrapper {
@@ -245,27 +244,32 @@ class AduroStoveCard extends HTMLElement {
           height: 20px;
           background: var(--divider-color);
           border-radius: 10px;
-          overflow: hidden;
+          overflow: visible;
         }
 
-        .co-bar {
+        .co-bar-fill {
           position: absolute;
           height: 100%;
-          transition: width 0.3s ease, left 0.3s ease;
-        }
-
-        .co-bar.green {
           background: #4caf50;
           left: 0;
-          z-index: 1;
+          border-radius: 10px;
+          transition: width 0.3s ease;
         }
 
-        .co-bar.yellow {
+        .co-marker {
+          position: absolute;
+          width: 3px;
+          height: 100%;
+          top: 0;
+          transition: left 0.3s ease;
+        }
+
+        .co-marker.yellow {
           background: #ffc107;
           z-index: 2;
         }
 
-        .co-bar.red {
+        .co-marker.red {
           background: #f44336;
           z-index: 3;
         }
@@ -276,6 +280,21 @@ class AduroStoveCard extends HTMLElement {
           margin-top: 4px;
           font-size: 10px;
           color: var(--secondary-text-color);
+        }
+
+        /* Refill Counter Section */
+        .refill-section {
+          padding: 0 16px 16px 16px;
+          text-align: center;
+        }
+
+        .refill-display {
+          background: var(--secondary-background-color);
+          border: 1px solid var(--divider-color);
+          border-radius: 12px;
+          padding: 12px 16px;
+          font-size: 14px;
+          color: var(--primary-text-color);
         }
         
         /* Pellet Section - Hidden */
@@ -503,26 +522,32 @@ class AduroStoveCard extends HTMLElement {
           <div class="info-card">
             <div class="info-label">${this._t("info_label")}</div>
             <div class="info-value" id="smoke-temp">-</div>
-            <div class="co-bar-container">
-              <div class="co-bar-wrapper">
-                <div class="co-bar green" id="co-bar-green"></div>
-                <div class="co-bar yellow" id="co-bar-yellow"></div>
-                <div class="co-bar red" id="co-bar-red"></div>
-              </div>
-              <div class="co-values">
-                <span id="co-value-green">0</span>
-                <span id="co-value-yellow">-</span>
-                <span id="co-value-red">-</span>
-              </div>
-            </div>
           </div>
           <div class="info-card">
             <div class="info-label">${this._t("pellets_left")}</div>
             <div class="info-value" id="pellet-percent">-</div>
-            <div class="refill-badge" id="refill-counter">0 ${this._t(
-              "kg_since_cleaning"
-            )}</div>
           </div>
+        </div>
+
+        <!-- Carbon Monoxide Bar -->
+        <div class="co-section">
+          <div class="co-bar-wrapper">
+            <div class="co-bar-fill" id="co-bar-fill"></div>
+            <div class="co-marker yellow" id="co-marker-yellow"></div>
+            <div class="co-marker red" id="co-marker-red"></div>
+          </div>
+          <div class="co-values">
+            <span id="co-value-green">0</span>
+            <span id="co-value-yellow">-</span>
+            <span id="co-value-red">-</span>
+          </div>
+        </div>
+
+        <!-- Refill Counter -->
+        <div class="refill-section">
+          <div class="refill-display" id="refill-counter">0 ${this._t(
+            "kg_since_cleaning"
+          )}</div>
         </div>
         
         <!-- Pellet Bar -->
@@ -886,24 +911,22 @@ class AduroStoveCard extends HTMLElement {
 
       const maxValue = 1000;
 
-      // Calculate percentages for bar widths
+      // Calculate percentages for bar positions
       const greenWidth = Math.min((coValue / maxValue) * 100, 100);
-      const yellowWidth = Math.min((coYellowValue / maxValue) * 100, 100);
-      const redWidth = Math.min((coRedValue / maxValue) * 100, 100);
+      const yellowPos = Math.min((coYellowValue / maxValue) * 100, 100);
+      const redPos = Math.min((coRedValue / maxValue) * 100, 100);
 
-      console.log("CO Bar widths - Green:", greenWidth, "Yellow:", yellowWidth, "Red:", redWidth);
+      console.log("CO Bar - Green width:", greenWidth, "Yellow pos:", yellowPos, "Red pos:", redPos);
 
-      // Update bar widths
-      const greenBar = this.shadowRoot.querySelector("#co-bar-green");
-      const yellowBar = this.shadowRoot.querySelector("#co-bar-yellow");
-      const redBar = this.shadowRoot.querySelector("#co-bar-red");
+      // Update bar fill and markers
+      const fillBar = this.shadowRoot.querySelector("#co-bar-fill");
+      const yellowMarker = this.shadowRoot.querySelector("#co-marker-yellow");
+      const redMarker = this.shadowRoot.querySelector("#co-marker-red");
 
-      if (greenBar && yellowBar && redBar) {
-        greenBar.style.width = `${greenWidth}%`;
-        yellowBar.style.width = `${yellowWidth - greenWidth}%`;
-        yellowBar.style.left = `${greenWidth}%`;
-        redBar.style.width = `${redWidth - yellowWidth}%`;
-        redBar.style.left = `${yellowWidth}%`;
+      if (fillBar && yellowMarker && redMarker) {
+        fillBar.style.width = `${greenWidth}%`;
+        yellowMarker.style.left = `${yellowPos}%`;
+        redMarker.style.left = `${redPos}%`;
 
         // Update value displays
         this.shadowRoot.querySelector("#co-value-green").textContent = Math.round(coValue);
