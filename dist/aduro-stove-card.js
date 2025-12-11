@@ -274,79 +274,6 @@ class AduroStoveCard extends HTMLElement {
           z-index: 3;
         }
 
-        .co-values {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 4px;
-          font-size: 10px;
-          color: var(--secondary-text-color);
-        }
-
-        /* Refill Counter Section */
-        .refill-section {
-          padding: 0 16px 16px 16px;
-          text-align: center;
-        }
-
-        .refill-display {
-          background: var(--secondary-background-color);
-          border: 1px solid var(--divider-color);
-          border-radius: 12px;
-          padding: 12px 16px;
-          font-size: 14px;
-          color: var(--primary-text-color);
-        }
-        
-        /* Pellet Section - Hidden */
-        .pellet-section {
-          display: none;
-        }
-        
-        .pellet-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
-        }
-        
-        .pellet-label {
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--primary-text-color);
-        }
-        
-        .refill-count {
-          font-size: 12px;
-          color: var(--secondary-text-color);
-          background: var(--secondary-background-color);
-          padding: 4px 12px;
-          border-radius: 12px;
-        }
-        
-        .pellet-bar {
-          height: 40px;
-          background: var(--divider-color);
-          border-radius: 20px;
-          overflow: hidden;
-          position: relative;
-        }
-        
-        .pellet-fill {
-          height: 100%;
-          background: var(--primary-color);
-          transition: width 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-primary-color);
-          font-weight: 700;
-          font-size: 16px;
-        }
-        
-        .pellet-fill.low {
-          background: var(--error-color);
-        }
-        
         /* Control Buttons Section */
         .control-buttons {
           display: grid;
@@ -452,6 +379,21 @@ class AduroStoveCard extends HTMLElement {
           text-align: center;
           font-size: 20px;
           font-weight: 700;
+          color: var(--primary-text-color);
+        }
+
+        /* Refill Counter Section */
+        .refill-section {
+          padding: 0 16px 16px 16px;
+          text-align: center;
+        }
+
+        .refill-display {
+          background: var(--secondary-background-color);
+          border: 1px solid var(--divider-color);
+          border-radius: 12px;
+          padding: 12px 16px;
+          font-size: 14px;
           color: var(--primary-text-color);
         }
         
@@ -909,7 +851,7 @@ class AduroStoveCard extends HTMLElement {
       const coYellowValue = parseFloat(coYellowEntity.state) || 800;
       const coRedValue = parseFloat(coRedEntity.state) || 900;
 
-      const maxValue = 1000;
+      const maxValue = 1100;
 
       // Calculate percentages for bar positions
       const greenWidth = Math.min((coValue / maxValue) * 100, 100);
@@ -928,10 +870,6 @@ class AduroStoveCard extends HTMLElement {
         yellowMarker.style.left = `${yellowPos}%`;
         redMarker.style.left = `${redPos}%`;
 
-        // Update value displays
-        this.shadowRoot.querySelector("#co-value-green").textContent = Math.round(coValue);
-        this.shadowRoot.querySelector("#co-value-yellow").textContent = Math.round(coYellowValue);
-        this.shadowRoot.querySelector("#co-value-red").textContent = Math.round(coRedValue);
       }
     }
 
