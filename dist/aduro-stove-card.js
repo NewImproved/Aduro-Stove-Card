@@ -520,10 +520,8 @@ class AduroStoveCard extends HTMLElement {
         <!-- Action Buttons with Consumption -->
         <div class="action-section">
           <div class="consumption-card">
-            <div class="consumption-header">
-              <div class="consumption-label">${this._t("since_cleaning")}</div>
-              <div class="consumption-value" id="consumption-display">0 kg</div>
-            </div>
+            <div class="consumption-label">${this._t("since_cleaning")}</div>
+            <div class="consumption-value" id="consumption-display">0 kg</div>
           </div>
           <button class="action-btn" id="clean-btn">
             <ha-icon icon="mdi:broom"></ha-icon>
@@ -787,8 +785,12 @@ class AduroStoveCard extends HTMLElement {
     if (consumptionEntity) {
       const consumption = parseFloat(consumptionEntity.state) || 0;
       const consumptionElement = this.shadowRoot.querySelector("#consumption-display");
+      const consumptionLabel = this.shadowRoot.querySelector(".consumption-label");
       if (consumptionElement) {
         consumptionElement.textContent = `${consumption} kg`;
+      }
+      if (consumptionLabel) {
+        consumptionLabel.textContent = this._t("since_cleaning");
       }
       console.log("Consumption since cleaning value:", consumption);
     }
