@@ -37,7 +37,6 @@ class AduroStoveCard extends HTMLElement {
     
     if (this._initialized) {
       this._updateTitle();
-      this._updateTranslatedLabels();
     }
   }
 
@@ -87,29 +86,6 @@ class AduroStoveCard extends HTMLElement {
     const titleElement = this.shadowRoot.querySelector(".header-title");
     if (titleElement) {
       titleElement.textContent = this._getTitle();
-    }
-  }
-
-  _updateTranslatedLabels() {
-    // Update all translatable labels after translations are loaded
-    const labels = {
-      ".consumption-label": "since_cleaning",
-      "#info-label-smoke": "info_label",
-      "#info-label-pellets": "pellets_left",
-      "#power-btn-text": "power",
-      "#toggle-mode-btn-text": "toggle_mode",
-      "#heat-level-label": "heat_level",
-      "#target-temp-label": "target_temperature",
-      "#clean-btn-text": "stove_cleaned",
-      "#auto-shutdown-btn-text": "auto_shutdown",
-      "#auto-resume-btn-text": "auto_resume"
-    };
-
-    for (const [selector, key] of Object.entries(labels)) {
-      const element = this.shadowRoot.querySelector(selector);
-      if (element) {
-        element.textContent = this._t(key);
-      }
     }
   }
 	
@@ -484,11 +460,11 @@ class AduroStoveCard extends HTMLElement {
         <!-- Info Cards -->
         <div class="info-section">
           <div class="info-card">
-            <div class="info-label" id="info-label-smoke">${this._t("info_label")}</div>
+            <div class="info-label">${this._t("info_label")}</div>
             <div class="info-value" id="smoke-temp">-</div>
           </div>
           <div class="info-card">
-            <div class="info-label" id="info-label-pellets">${this._t("pellets_left")}</div>
+            <div class="info-label">${this._t("pellets_left")}</div>
             <div class="info-value" id="pellet-percent">-</div>
           </div>
         </div>
@@ -506,11 +482,11 @@ class AduroStoveCard extends HTMLElement {
         <div class="control-buttons">
           <button class="control-btn toggle-btn" id="power-btn">
             <ha-icon icon="mdi:power"></ha-icon>
-            <span id="power-btn-text">${this._t("power")}</span>
+            <span>${this._t("power")}</span>
           </button>
           <button class="control-btn" id="toggle-mode-btn">
             <ha-icon icon="mdi:sync"></ha-icon>
-            <span id="toggle-mode-btn-text">${this._t("toggle_mode")}</span>
+            <span>${this._t("toggle_mode")}</span>
           </button>
         </div>
         
@@ -518,7 +494,7 @@ class AduroStoveCard extends HTMLElement {
         <div class="adjusters-section">
           <div class="adjuster-card">
             <div class="adjuster-header">
-              <div class="adjuster-label" id="heat-level-label">${this._t("heat_level")}</div>
+              <div class="adjuster-label">${this._t("heat_level")}</div>
               <div class="adjuster-value" id="heat-level-display">-</div>
             </div>
             <div class="adjuster-controls">
@@ -531,7 +507,7 @@ class AduroStoveCard extends HTMLElement {
           <!-- Temperature Adjuster -->
           <div class="adjuster-card">
             <div class="adjuster-header">
-              <div class="adjuster-label" id="target-temp-label">${this._t("target_temperature")}</div>
+              <div class="adjuster-label">${this._t("target_temperature")}</div>
             </div>
             <div class="adjuster-controls">
               <button class="adjuster-btn" id="temp-down">−</button>
@@ -544,20 +520,20 @@ class AduroStoveCard extends HTMLElement {
         <!-- Action Buttons with Consumption -->
         <div class="action-section">
           <div class="consumption-card">
-            <div class="consumption-label">${this._t("since_cleaning")}</div>
+            <div class="consumption-label">${this._t("since_cleaning1")}</div>
             <div class="consumption-value" id="consumption-display">0 kg</div>
           </div>
           <button class="action-btn" id="clean-btn">
             <ha-icon icon="mdi:broom"></ha-icon>
-            <span id="clean-btn-text">${this._t("stove_cleaned")}</span>
+            <span>${this._t("stove_cleaned")}</span>
           </button>
           <button class="control-btn toggle-btn" id="auto-shutdown-btn">
             <ha-icon icon="mdi:power-settings"></ha-icon>
-            <span id="auto-shutdown-btn-text">${this._t("auto_shutdown")}</span>
+            <span>${this._t("auto_shutdown")}</span>
           </button>
           <button class="control-btn toggle-btn" id="auto-resume-btn">
             <ha-icon icon="mdi:play-circle"></ha-icon>
-            <span id="auto-resume-btn-text">${this._t("auto_resume")}</span>
+            <span>${this._t("auto_resume")}</span>
           </button>
         </div>
       </div>
@@ -565,7 +541,6 @@ class AduroStoveCard extends HTMLElement {
 
     this.shadowRoot.appendChild(card);
     this._setupEventListeners();
-    this._updateTranslatedLabels();
   }
 
   _getEntityId(suffix, domain = null) {
@@ -803,4 +778,66 @@ class AduroStoveCard extends HTMLElement {
     const pelletEntity = this._hass.states[this._getEntityId("pellet_percentage")];
     if (pelletEntity) {
       const percentage = parseInt(pelletEntity.state) || 0;
-      this.shadowRoot.querySelector("#pellet-percent").textContent = `${percentage
+      this.shadowRoot.querySelector("#pellet-percent").textContent = `${percentage}%`;
+    }
+
+    const consumptionEntity = this._hass.states[this._getEntityId("consumption_since_cleaning")];
+    if (consumptionEntity) {
+      const consumption = parseFloat(consumptionEntity.state) || 0;
+      const consumptionElement = this.shadowRoot.querySelector("#consumption-display");
+      if (consumptionElement) {
+        consumptionElement.textContent = `${consumption} kg`;
+      }
+      console.log("Consumption since cleaning value:", consumption);
+    }
+
+    const powerEntity = this._hass.states[this._getEntityId("power")];
+    const powerBtn = this.shadowRoot.querySelector("#power-btn");
+    if (powerEntity && powerEntity.state === "on") {
+      powerBtn.classList.add("on");
+    } else {
+      powerBtn.classList.remove("on");
+    }
+
+    const autoResumeEntity = this._hass.states[this._getEntityId("auto_resume_wood")];
+    const autoResumeBtn = this.shadowRoot.querySelector("#auto-resume-btn");
+    if (autoResumeEntity && autoResumeEntity.state === "on") {
+      autoResumeBtn.classList.add("on");
+    } else {
+      autoResumeBtn.classList.remove("on");
+    }
+
+    const autoShutdownEntity = this._hass.states[this._getEntityId("auto_shutdown")];
+    const autoShutdownBtn = this.shadowRoot.querySelector("#auto-shutdown-btn");
+    if (autoShutdownEntity && autoShutdownEntity.state === "on") {
+      autoShutdownBtn.classList.add("on");
+    } else {
+      autoShutdownBtn.classList.remove("on");
+    }
+
+    const heatLevelEntity = this._hass.states[this._getEntityId("heatlevel")];
+    if (heatLevelEntity) {
+      const level = parseInt(heatLevelEntity.state);
+      this.shadowRoot.querySelector("#heat-level-value").textContent = level;
+    }
+
+    const tempEntity = this._hass.states[this._getEntityId("temperature")];
+    if (tempEntity) {
+      const temp = this._pendingTempValue !== null ? this._pendingTempValue : parseFloat(tempEntity.state);
+      this.shadowRoot.querySelector("#temp-value").textContent = `${temp}°C`;
+    }
+  }
+
+  getCardSize() {
+    return 8;
+  }
+}
+
+customElements.define("aduro-stove-card", AduroStoveCard);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "aduro-stove-card",
+  name: "Aduro Stove Card",
+  description: "A custom card for controlling Aduro stoves",
+});
