@@ -102,12 +102,12 @@ class AduroStoveCard extends HTMLElement {
         }
         
         /* Header Section */
-		.header-section {
-		  padding: 20px;
-		  color: var(--primary-text-color);
-		  border-radius: 16px;
-		  margin-top: 16px;
-		}
+        .header-section {
+          padding: 20px;
+          color: var(--primary-text-color);
+          border-radius: 16px;
+          margin-top: 16px;
+        }
         
         .header-top {
           display: flex;
@@ -153,26 +153,25 @@ class AduroStoveCard extends HTMLElement {
         .status-sub {
           font-size: 14px;
           opacity: 0.7;
-		  color: var(--secondary-text-color);
+          color: var(--secondary-text-color);
         }     
-		
-		.status-display,
-		.display-format {
-		  background: var(--secondary-background-color);
-		  border: 1px solid var(--divider-color);
-		  padding: 12px 16px;
-		  border-radius: 12px;
-		  margin-bottom: 12px;
-		  color: var(--primary-text-color);
-		}
-		
-		.status-display {
-		  background: var(--secondary-background-color);
-		  border: 1px solid var(--divider-color);
-		  color: var(--primary-text-color);
-		  border-radius: 12px;
-		}
-        		
+        
+        .display-format {
+          background: var(--secondary-background-color);
+          border: 1px solid var(--divider-color);
+          padding: 12px 16px;
+          border-radius: 12px;
+          margin-bottom: 12px;
+          color: var(--primary-text-color);
+        }
+        
+        .status-display {
+          background: var(--secondary-background-color);
+          border: 1px solid var(--divider-color);
+          color: var(--primary-text-color);
+          border-radius: 12px;
+        }
+                
         .display-updating {
           font-size: 11px;
           opacity: 0.7;
@@ -187,18 +186,18 @@ class AduroStoveCard extends HTMLElement {
           background: var(--card-background-color);
         }
         
-		.info-card {
-		  background: var(--secondary-background-color);
-		  border-radius: 12px;
-		  padding: 16px;
-		  text-align: center;
-		  border: 1px solid var(--divider-color);
-		  position: relative;
-		  display: flex;
-		  flex-direction: column;
-		  justify-content: center; 
-		  align-items: center;
-		}
+        .info-card {
+          background: var(--secondary-background-color);
+          border-radius: 12px;
+          padding: 16px;
+          text-align: center;
+          border: 1px solid var(--divider-color);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: center; 
+          align-items: center;
+        }
         
         .info-label {
           font-size: 12px;
@@ -212,17 +211,17 @@ class AduroStoveCard extends HTMLElement {
           color: var(--primary-text-color);
         }
         
-		.refill-badge {
-		  position: static;
-		  margin-top: 6px;
-		  font-size: 11px;
-		  color: var(--secondary-text-color);
-		  background: var(--secondary-background-color);
-		  padding: 2px 6px;
-		  border-radius: 8px;
-		  border: 1px solid var(--divider-color);
-		  display: inline-block;
-		}
+        .refill-badge {
+          position: static;
+          margin-top: 6px;
+          font-size: 11px;
+          color: var(--secondary-text-color);
+          background: var(--secondary-background-color);
+          padding: 2px 6px;
+          border-radius: 8px;
+          border: 1px solid var(--divider-color);
+          display: inline-block;
+        }
 
         /* Carbon Monoxide Bar Section */
         .co-section {
