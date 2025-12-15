@@ -42,14 +42,6 @@ class AduroStoveCard extends HTMLElement {
       this._updateTitle();
     }
   }
-	
-  setConfig(config) {
-    if (!config.entity) {
-      throw new Error("Please define an entity");
-    }
-    this._config = config;
-    console.log("Card configured with entity:", config.entity);
-  }
 
   async _loadTranslations() {
     try {
