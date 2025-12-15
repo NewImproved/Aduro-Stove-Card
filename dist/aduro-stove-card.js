@@ -568,8 +568,8 @@ class AduroStoveCard extends HTMLElement {
     const entityMap = {
       // Switches
       power: "switch.power",
-      auto_shutdown: "switch.auto_shutdown_at_low_pellets",
-      auto_resume_wood: "switch.auto_resume_after_wood_mode",
+      auto_shutdown_at_low_pellets: "switch.auto_shutdown_at_low_pellets",
+      auto_resume_after_wood_mode: "switch.auto_resume_after_wood_mode",
 
       // Numbers
       heatlevel: "number.heat_level",
@@ -635,14 +635,14 @@ class AduroStoveCard extends HTMLElement {
     // Auto resume button
     const autoResumeBtn = this.shadowRoot.querySelector("#auto-resume-btn");
     autoResumeBtn.addEventListener("click", () => {
-      const entityId = this._getEntityId("auto_resume_wood");
+      const entityId = this._getEntityId("auto_resume_after_wood_mode");
       this._hass.callService("switch", "toggle", { entity_id: entityId });
     });
 
     // Auto shutdown button
     const autoShutdownBtn = this.shadowRoot.querySelector("#auto-shutdown-btn");
     autoShutdownBtn.addEventListener("click", () => {
-      const entityId = this._getEntityId("auto_shutdown");
+      const entityId = this._getEntityId("auto_shutdown_at_low_pellets");
       this._hass.callService("switch", "toggle", { entity_id: entityId });
     });
 
@@ -860,7 +860,7 @@ class AduroStoveCard extends HTMLElement {
 
     // Update auto resume button
     const autoResumeEntity =
-      this._hass.states[this._getEntityId("auto_resume_wood")];
+      this._hass.states[this._getEntityId("auto_resume_after_wood_mode")];
     const autoResumeBtn = this.shadowRoot.querySelector("#auto-resume-btn");
     if (autoResumeEntity && autoResumeEntity.state === "on") {
       autoResumeBtn.classList.add("on");
@@ -870,7 +870,7 @@ class AduroStoveCard extends HTMLElement {
 
     // Update auto shutdown button
     const autoShutdownEntity =
-      this._hass.states[this._getEntityId("auto_shutdown")];
+      this._hass.states[this._getEntityId("auto_shutdown_at_low_pellets")];
     const autoShutdownBtn = this.shadowRoot.querySelector("#auto-shutdown-btn");
     if (autoShutdownEntity && autoShutdownEntity.state === "on") {
       autoShutdownBtn.classList.add("on");
