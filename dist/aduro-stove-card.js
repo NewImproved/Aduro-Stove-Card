@@ -568,7 +568,7 @@ class AduroStoveCard extends HTMLElement {
       display_format: "sensor.display_format",
       smoke_temp: "sensor.smoke_temp",
       pellet_percentage: "sensor.pellet_percentage",
-      refill_counter: "sensor.refill_counter",
+      refill_counter: "sensor.consumption_since_cleaning",
       consumption_since_cleaning: "sensor.consumption_since_cleaning",
       carbon_monoxide: "sensor.carbon_monoxide",
       carbon_monoxide_yellow: "sensor.carbon_monoxide_yellow",
@@ -808,4 +808,36 @@ class AduroStoveCard extends HTMLElement {
     }
 
     const autoShutdownEntity = this._hass.states[this._getEntityId("auto_shutdown")];
-    const autoShutdownBtn =
+    const autoShutdownBtn = this.shadowRoot.querySelector("#auto-shutdown-btn");
+    if (autoShutdownEntity && autoShutdownEntity.state === "on") {
+      autoShutdownBtn.classList.add("on");
+    } else {
+      autoShutdownBtn.classList.remove("on");
+    }
+
+    const heatLevelEntity = this._hass.states[this._getEntityId("heatlevel")];
+    if (heatLevelEntity) {
+      const level = parseInt(heatLevelEntity.state);
+      this.shadowRoot.querySelector("#heat-level-value").textContent = level;
+    }
+
+    const tempEntity = this._hass.states[this._getEntityId("temperature")];
+    if (tempEntity) {
+      const temp = this._pendingTempValue !== null ? this._pendingTempValue : parseFloat(tempEntity.state);
+      this.shadowRoot.querySelector("#temp-value").textContent = `${temp}°C`;
+    }
+  }
+
+  getCardSize() {
+    return 8;
+  }
+}
+
+customElements.define("aduro-stove-card", AduroStoveCard);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "aduro-stove-card",
+  name: "Aduro Stove Card",
+  description: "A custom card for controlling Aduro stoves",
+});
