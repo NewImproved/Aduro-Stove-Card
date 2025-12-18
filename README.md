@@ -6,7 +6,7 @@
 
 A custom Lovelace card for controlling Aduro Hybrid Stoves in Home Assistant.
 
-<img width="506" height="737" alt="image" src="https://github.com/user-attachments/assets/d8289aa5-602b-40c2-9234-6a8a593d6933" />
+<img width="505" height="724" alt="image" src="https://github.com/user-attachments/assets/0f1388ff-0926-4187-b123-33ad72a3e70b" />
 
 
 ## Features
