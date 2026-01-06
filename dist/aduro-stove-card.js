@@ -798,7 +798,7 @@ class AduroStoveCard extends HTMLElement {
       const consumption = parseFloat(consumptionEntity.state) || 0;
       const consumptionSubtitle = this.shadowRoot.querySelector("#consumption-subtitle");
       if (consumptionSubtitle) {
-        consumptionSubtitle.textContent = `${this._t("since_cleaning")} ${consumption} kg`;
+        consumptionSubtitle.textContent = `${consumption} kg ${this._t("since_cleaning")}`;
       }
       console.log("Consumption since cleaning value:", consumption);
     }
