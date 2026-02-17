@@ -458,10 +458,6 @@ class AduroStoveCard extends HTMLElement {
             <div class="display-updating hidden" id="updating-text">${this._t("updating_text")}</div>
           </div>
 
-          <!-- Pellet Depletion Tile -->
-          <div class="display-format">
-            <div id="pellet-depletion">-</div>
-          </div>
         </div>
 
         <!-- Info Cards -->
@@ -473,6 +469,13 @@ class AduroStoveCard extends HTMLElement {
           <div class="info-card">
             <div class="info-label">${this._t("pellets_left")}</div>
             <div class="info-value" id="pellet-percent">-</div>
+          </div>
+        </div>
+
+        <!-- Pellet Depletion Tile -->
+        <div style="padding: 8px 16px 0 16px;">
+          <div class="display-format" style="margin-bottom: 0;">
+            <div id="pellet-depletion">-</div>
           </div>
         </div>
 
