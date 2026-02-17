@@ -34,7 +34,7 @@ class AduroStoveCard extends HTMLElement {
     }
     this._config = config;
     console.log("Card configured with entity:", config.entity);
-    
+
     if (this._initialized) {
       this._updateTitle();
     }
@@ -88,7 +88,7 @@ class AduroStoveCard extends HTMLElement {
       titleElement.textContent = this._getTitle();
     }
   }
-	
+
   _initialize() {
     this._initialized = true;
 
@@ -100,84 +100,84 @@ class AduroStoveCard extends HTMLElement {
         .card-content {
           padding: 0;
         }
-        
+
         /* Header Section */
-		.header-section {
-		  padding: 20px;
-		  color: var(--primary-text-color);
-		  border-radius: 16px;
-		  margin-top: 16px;
-		}
-        
+        .header-section {
+          padding: 20px;
+          color: var(--primary-text-color);
+          border-radius: 16px;
+          margin-top: 16px;
+        }
+
         .header-top {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 16px;
         }
-        
+
         .header-title {
           font-size: 24px;
           font-weight: 600;
         }
-        
+
         .status-icons {
           display: flex;
           gap: 8px;
           align-items: center;
         }
-        
+
         .status-icon {
           width: 28px;
           height: 28px;
           animation: spin 2s linear infinite;
           transform-origin: center center;
         }
-        
+
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-        
+
         .hidden {
           display: none;
         }
-        
+
         .status-main {
           font-size: 18px;
           font-weight: 600;
           margin-bottom: 4px;
           color: var(--primary-text-color);
         }
-        
+
         .status-sub {
           font-size: 14px;
           opacity: 0.7;
-		  color: var(--secondary-text-color);
-        }     
-		
-		.status-display,
-		.display-format {
-		  background: var(--secondary-background-color);
-		  border: 1px solid var(--divider-color);
-		  padding: 12px 16px;
-		  border-radius: 12px;
-		  margin-bottom: 12px;
-		  color: var(--primary-text-color);
-		}
-		
-		.status-display {
-		  background: var(--secondary-background-color);
-		  border: 1px solid var(--divider-color);
-		  color: var(--primary-text-color);
-		  border-radius: 12px;
-		}
-        		
+          color: var(--secondary-text-color);
+        }
+
+        .status-display,
+        .display-format {
+          background: var(--secondary-background-color);
+          border: 1px solid var(--divider-color);
+          padding: 12px 16px;
+          border-radius: 12px;
+          margin-bottom: 12px;
+          color: var(--primary-text-color);
+        }
+
+        .status-display {
+          background: var(--secondary-background-color);
+          border: 1px solid var(--divider-color);
+          color: var(--primary-text-color);
+          border-radius: 12px;
+        }
+
         .display-updating {
           font-size: 11px;
           opacity: 0.7;
         }
-        
+
         /* Info Cards Section */
         .info-section {
           display: grid;
@@ -186,43 +186,43 @@ class AduroStoveCard extends HTMLElement {
           padding: 16px;
           background: var(--card-background-color);
         }
-        
-		.info-card {
-		  background: var(--secondary-background-color);
-		  border-radius: 12px;
-		  padding: 16px;
-		  text-align: center;
-		  border: 1px solid var(--divider-color);
-		  position: relative;
-		  display: flex;
-		  flex-direction: column;
-		  justify-content: center; 
-		  align-items: center;
-		}
-        
+
+        .info-card {
+          background: var(--secondary-background-color);
+          border-radius: 12px;
+          padding: 16px;
+          text-align: center;
+          border: 1px solid var(--divider-color);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+
         .info-label {
           font-size: 12px;
           color: var(--secondary-text-color);
           margin-bottom: 4px;
         }
-        
+
         .info-value {
           font-size: 18px;
           font-weight: 600;
           color: var(--primary-text-color);
         }
-        
-		.refill-badge {
-		  position: static;
-		  margin-top: 6px;
-		  font-size: 11px;
-		  color: var(--secondary-text-color);
-		  background: var(--secondary-background-color);
-		  padding: 2px 6px;
-		  border-radius: 8px;
-		  border: 1px solid var(--divider-color);
-		  display: inline-block;
-		}
+
+        .refill-badge {
+          position: static;
+          margin-top: 6px;
+          font-size: 11px;
+          color: var(--secondary-text-color);
+          background: var(--secondary-background-color);
+          padding: 2px 6px;
+          border-radius: 8px;
+          border: 1px solid var(--divider-color);
+          display: inline-block;
+        }
 
         /* Carbon Monoxide Bar Section */
         .co-section {
@@ -263,7 +263,7 @@ class AduroStoveCard extends HTMLElement {
           background: #f44336;
           z-index: 3;
         }
-        
+
         /* Control Buttons Section */
         .control-buttons {
           display: grid;
@@ -271,7 +271,7 @@ class AduroStoveCard extends HTMLElement {
           gap: 12px;
           padding: 0 16px 16px 16px;
         }
-        
+
         .control-btn {
           display: flex;
           align-items: center;
@@ -287,23 +287,23 @@ class AduroStoveCard extends HTMLElement {
           background: var(--secondary-background-color);
           color: var(--primary-text-color);
         }
-        
+
         .control-btn:active {
           transform: scale(0.95);
         }
-        
+
         .control-btn.toggle-btn {
           background: var(--secondary-background-color);
           color: var(--secondary-text-color);
           border: 1px solid var(--divider-color);
         }
-        
+
         .control-btn.toggle-btn.on {
           background: var(--primary-color);
           color: var(--text-primary-color);
           border: 1px solid var(--primary-color);
         }
-        
+
         /* Adjusters Section */
         .adjusters-section {
           padding: 0 16px 16px 16px;
@@ -311,40 +311,40 @@ class AduroStoveCard extends HTMLElement {
           grid-template-columns: repeat(2, 1fr);
           gap: 12px;
         }
-        
+
         .adjuster-card {
           background: var(--card-background-color);
           border: 1px solid var(--divider-color);
           border-radius: 12px;
           padding: 12px;
         }
-        
+
         .adjuster-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 8px;
         }
-        
+
         .adjuster-label {
           font-size: 12px;
           font-weight: 500;
           color: var(--primary-text-color);
         }
-        
+
         .adjuster-value {
           font-size: 14px;
           font-weight: 600;
           color: var(--primary-color);
         }
-        
+
         .adjuster-controls {
           display: grid;
           grid-template-columns: auto 1fr auto;
           gap: 8px;
           align-items: center;
         }
-        
+
         .adjuster-btn {
           width: 32px;
           height: 32px;
@@ -360,26 +360,26 @@ class AduroStoveCard extends HTMLElement {
           align-items: center;
           justify-content: center;
         }
-        
+
         .adjuster-btn:active {
           transform: scale(0.9);
         }
-        
+
         .adjuster-display {
           text-align: center;
           font-size: 20px;
           font-weight: 700;
           color: var(--primary-text-color);
         }
-        
-        /* Action Buttons - 2x2 grid */
+
+        /* Action Buttons - 2-column grid */
         .action-section {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 12px;
           padding: 0 16px 16px 16px;
         }
-        
+
         .action-btn {
           padding: 16px;
           border: 1px solid var(--divider-color);
@@ -396,7 +396,7 @@ class AduroStoveCard extends HTMLElement {
           background: var(--secondary-background-color);
           color: var(--primary-text-color);
         }
-        
+
         .action-btn-content {
           display: flex;
           flex-direction: column;
@@ -404,40 +404,40 @@ class AduroStoveCard extends HTMLElement {
           gap: 4px;
           width: 100%;
         }
-        
+
         .action-btn-main {
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
         }
-        
+
         .action-btn-subtitle {
           font-size: 11px;
           font-weight: 400;
           color: var(--secondary-text-color);
           opacity: 0.8;
         }
-        
+
         .action-btn:hover {
           background: var(--primary-color);
           color: var(--text-primary-color);
           border-color: var(--primary-color);
         }
-        
+
         .action-btn:hover .action-btn-subtitle {
           color: var(--text-primary-color);
         }
-        
+
         .action-btn:active {
           transform: scale(0.95);
         }
-        
+
         ha-icon {
           --mdc-icon-size: 20px;
         }
       </style>
-      
+
       <div class="card-content">
         <!-- Header Section -->
         <div class="header-section">
@@ -447,18 +447,23 @@ class AduroStoveCard extends HTMLElement {
               <ha-icon class="status-icon hidden" id="change-icon" icon="mdi:sync"></ha-icon>
             </div>
           </div>
-          
+
           <div class="status-display">
             <div class="status-main" id="status-main">-</div>
             <div class="status-sub" id="status-sub">-</div>
           </div>
-          
+
           <div class="display-format">
             <div id="display-format">-</div>
             <div class="display-updating hidden" id="updating-text">${this._t("updating_text")}</div>
           </div>
+
+          <!-- Pellet Depletion Tile -->
+          <div class="display-format">
+            <div id="pellet-depletion">-</div>
+          </div>
         </div>
-        
+
         <!-- Info Cards -->
         <div class="info-section">
           <div class="info-card">
@@ -479,7 +484,7 @@ class AduroStoveCard extends HTMLElement {
             <div class="co-marker red" id="co-marker-red"></div>
           </div>
         </div>
-        
+
         <!-- Control Buttons -->
         <div class="control-buttons">
           <button class="control-btn toggle-btn" id="power-btn">
@@ -491,8 +496,8 @@ class AduroStoveCard extends HTMLElement {
             <span>${this._t("toggle_mode")}</span>
           </button>
         </div>
-        
-        <!-- Heat Level Adjuster -->
+
+        <!-- Heat Level & Temperature Adjusters -->
         <div class="adjusters-section">
           <div class="adjuster-card">
             <div class="adjuster-header">
@@ -505,7 +510,7 @@ class AduroStoveCard extends HTMLElement {
               <button class="adjuster-btn" id="heat-up">+</button>
             </div>
           </div>
-          
+
           <!-- Temperature Adjuster -->
           <div class="adjuster-card">
             <div class="adjuster-header">
@@ -518,8 +523,8 @@ class AduroStoveCard extends HTMLElement {
             </div>
           </div>
         </div>
-        
-        <!-- Action Buttons - 2x2 grid -->
+
+        <!-- Action Buttons - 2-column grid (3 rows) -->
         <div class="action-section">
           <button class="control-btn" id="clean-btn">
             <div class="action-btn-content">
@@ -533,6 +538,14 @@ class AduroStoveCard extends HTMLElement {
           <button class="control-btn" id="refill-btn">
             <ha-icon icon="mdi:reload"></ha-icon>
             <span>${this._t("pellets_refilled")}</span>
+          </button>
+          <button class="control-btn" id="reset-alarm-btn">
+            <ha-icon icon="mdi:alarm-off"></ha-icon>
+            <span>${this._t("reset_alarm")}</span>
+          </button>
+          <button class="control-btn toggle-btn" id="force-fan-btn">
+            <ha-icon icon="mdi:fan"></ha-icon>
+            <span>${this._t("force_fan")}</span>
           </button>
           <button class="control-btn toggle-btn" id="auto-shutdown-btn">
             <ha-icon icon="mdi:power-settings"></ha-icon>
@@ -558,6 +571,7 @@ class AduroStoveCard extends HTMLElement {
       power: "switch.power",
       auto_shutdown: "switch.auto_shutdown_at_low_pellets",
       auto_resume_wood: "switch.auto_resume_after_wood_mode",
+      force_fan: "switch.force_fan",
       heatlevel: "number.heat_level",
       temperature: "number.target_temperature",
       pellet_capacity: "number.pellet_capacity",
@@ -566,12 +580,14 @@ class AduroStoveCard extends HTMLElement {
       toggle_mode: "button.toggle_mode",
       refill_pellets: "button.refill_pellets",
       clean_stove: "button.clean_stove",
+      reset_alarm: "button.reset_alarm",
       resume_after_wood: "button.resume_after_wood_mode",
       force_auger: "button.force_auger",
       status_main: "sensor.state",
       status_sub: "sensor.substate",
       change_in_progress: "sensor.change_in_progress",
       display_format: "sensor.display_format",
+      pellet_depletion: "sensor.pellet_depletion",
       smoke_temp: "sensor.smoke_temp",
       pellet_percentage: "sensor.pellet_percentage",
       refill_counter: "sensor.refill_counter",
@@ -621,6 +637,18 @@ class AduroStoveCard extends HTMLElement {
     autoShutdownBtn.addEventListener("click", () => {
       const entityId = this._getEntityId("auto_shutdown");
       this._hass.callService("switch", "toggle", { entity_id: entityId });
+    });
+
+    // Force Fan - behaves like power button (toggle switch with confirm)
+    const forceFanBtn = this.shadowRoot.querySelector("#force-fan-btn");
+    forceFanBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("force_fan");
+      const fanEntity = this._hass.states[entityId];
+      const isOn = fanEntity && fanEntity.state === "on";
+      const message = isOn ? this._t("confirm_force_fan_off") : this._t("confirm_force_fan_on");
+      if (confirm(message)) {
+        this._hass.callService("switch", "toggle", { entity_id: entityId });
+      }
     });
 
     const heatUpBtn = this.shadowRoot.querySelector("#heat-up");
@@ -697,16 +725,31 @@ class AduroStoveCard extends HTMLElement {
       setTimeout(() => e.currentTarget.blur(), 100);
     });
 
+    // Clean Stove - with confirm
     const cleanBtn = this.shadowRoot.querySelector("#clean-btn");
     cleanBtn.addEventListener("click", () => {
       const entityId = this._getEntityId("clean_stove");
-      this._hass.callService("button", "press", { entity_id: entityId });
+      if (confirm(this._t("confirm_clean_stove"))) {
+        this._hass.callService("button", "press", { entity_id: entityId });
+      }
     });
 
+    // Refill Pellets - with confirm
     const refillBtn = this.shadowRoot.querySelector("#refill-btn");
     refillBtn.addEventListener("click", () => {
       const entityId = this._getEntityId("refill_pellets");
-      this._hass.callService("button", "press", { entity_id: entityId });
+      if (confirm(this._t("confirm_refill_pellets"))) {
+        this._hass.callService("button", "press", { entity_id: entityId });
+      }
+    });
+
+    // Reset Alarm - behaves like clean_stove (button press with confirm)
+    const resetAlarmBtn = this.shadowRoot.querySelector("#reset-alarm-btn");
+    resetAlarmBtn.addEventListener("click", () => {
+      const entityId = this._getEntityId("reset_alarm");
+      if (confirm(this._t("confirm_reset_alarm"))) {
+        this._hass.callService("button", "press", { entity_id: entityId });
+      }
     });
   }
 
@@ -746,6 +789,12 @@ class AduroStoveCard extends HTMLElement {
     const displayFormatEntity = this._hass.states[this._getEntityId("display_format")];
     if (displayFormatEntity) {
       this.shadowRoot.querySelector("#display-format").textContent = displayFormatEntity.state;
+    }
+
+    // Pellet Depletion tile
+    const pelletDepletionEntity = this._hass.states[this._getEntityId("pellet_depletion")];
+    if (pelletDepletionEntity) {
+      this.shadowRoot.querySelector("#pellet-depletion").textContent = pelletDepletionEntity.state;
     }
 
     const smokeTempEntity = this._hass.states[this._getEntityId("smoke_temp")];
@@ -825,6 +874,15 @@ class AduroStoveCard extends HTMLElement {
       autoShutdownBtn.classList.add("on");
     } else {
       autoShutdownBtn.classList.remove("on");
+    }
+
+    // Force Fan toggle state
+    const forceFanEntity = this._hass.states[this._getEntityId("force_fan")];
+    const forceFanBtn = this.shadowRoot.querySelector("#force-fan-btn");
+    if (forceFanEntity && forceFanEntity.state === "on") {
+      forceFanBtn.classList.add("on");
+    } else {
+      forceFanBtn.classList.remove("on");
     }
 
     const heatLevelEntity = this._hass.states[this._getEntityId("heatlevel")];
