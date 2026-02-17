@@ -473,7 +473,7 @@ class AduroStoveCard extends HTMLElement {
         </div>
 
         <!-- Pellet Depletion Tile -->
-        <div style="padding: 8px 16px 0 16px;">
+        <div style="padding: 8px 16px;">
           <div class="display-format" style="margin-bottom: 0;">
             <div id="pellet-depletion">-</div>
           </div>
