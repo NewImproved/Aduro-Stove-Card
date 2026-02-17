@@ -18,5 +18,12 @@
   "confirm_power_on": "Are you sure you want to turn ON the stove?",
   "confirm_power_off": "Are you sure you want to turn OFF the stove?",
   "confirm_turn_on": "Are you sure you want to turn ON the stove?",
-  "confirm_turn_off": "Are you sure you want to turn OFF the stove?"
+  "confirm_turn_off": "Are you sure you want to turn OFF the stove?",
+  "reset_alarm": "Reset Alarm",
+  "force_fan": "Force Fan",
+  "confirm_clean_stove": "Are you sure you want to mark the stove as cleaned?",
+  "confirm_refill_pellets": "Are you sure you want to mark the pellets as refilled?",
+  "confirm_reset_alarm": "Are you sure you want to reset the alarm?",
+  "confirm_force_fan_on": "Are you sure you want to force the fan ON?",
+  "confirm_force_fan_off": "Are you sure you want to turn OFF the forced fan?"
 }
