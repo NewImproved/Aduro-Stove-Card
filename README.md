@@ -1,7 +1,5 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate/?hosted_button_id=W6WPMAQ3YKK6G)
 [![GitHub release](https://img.shields.io/github/release/NewImproved/Aduro-Stove-Card.svg)](https://github.com/NewImproved/Aduro-Stove-Card/releases)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/NewImproved/Aduro/total)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/NewImproved/Aduro/latest/total)
 
 # Aduro Stove Card
 
