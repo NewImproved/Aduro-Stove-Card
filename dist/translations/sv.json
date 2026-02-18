@@ -25,5 +25,6 @@
   "confirm_refill_pellets": "Är du säker på att du vill markera pelletsen som påfylld?",
   "confirm_reset_alarm": "Är du säker på att du vill återställa larmet?",
   "confirm_force_fan_on": "Är du säker på att du vill STARTA fläkten?",
-  "confirm_force_fan_off": "Är du säker på att du vill STÄNGA AV fläkten?"
+  "confirm_force_fan_off": "Är du säker på att du vill STÄNGA AV fläkten?",
+  "depletion_time_label": "Sluttid:"
 }
