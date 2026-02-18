@@ -25,5 +25,6 @@
   "confirm_refill_pellets": "Möchten Sie die Pellets wirklich als nachgefüllt markieren?",
   "confirm_reset_alarm": "Möchten Sie den Alarm wirklich zurücksetzen?",
   "confirm_force_fan_on": "Möchten Sie den Lüfter wirklich ERZWINGEN?",
-  "confirm_force_fan_off": "Möchten Sie den erzwungenen Lüfter wirklich AUSSCHALTEN?"
+  "confirm_force_fan_off": "Möchten Sie den erzwungenen Lüfter wirklich AUSSCHALTEN?",
+  "depletion_time_label": "Erschöpfungszeitpunkt:"
 }
