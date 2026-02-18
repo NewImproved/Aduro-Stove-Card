@@ -25,5 +25,6 @@
   "confirm_refill_pellets": "Voulez-vous vraiment marquer les granulés comme rechargés ?",
   "confirm_reset_alarm": "Voulez-vous vraiment réinitialiser l'alarme ?",
   "confirm_force_fan_on": "Voulez-vous vraiment FORCER le démarrage du ventilateur ?",
-  "confirm_force_fan_off": "Voulez-vous vraiment ARRÊTER le ventilateur forcé ?"
+  "confirm_force_fan_off": "Voulez-vous vraiment ARRÊTER le ventilateur forcé ?",
+  "depletion_time_label": "Épuisement prévu :"
 }
