@@ -69,6 +69,7 @@ Add the card to your Lovelace dashboard:
 type: custom:aduro-stove-card
 entity: sensor.aduro_h2 [Your stove]
 title: My Custom Title
+debug: false
 ```
 
 ### Configuration Options
@@ -76,6 +77,7 @@ title: My Custom Title
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
 | `entity` | string | Yes | - | The base entity for your Aduro stove (e.g., `sensor.aduro_h2`) |
+| `debug` | boolean | No | false | enable debug logging to the console |
 
 ## Requirements
 

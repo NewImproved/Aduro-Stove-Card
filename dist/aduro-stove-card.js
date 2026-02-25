@@ -1,12 +1,31 @@
 const TRANSLATIONS_BASE = "/hacsfiles/Aduro-Stove-Card/translations";
 
 class AduroStoveCard extends HTMLElement {
+  _config = {
+    debug: false
+  };
+
   constructor() {
     super();
     this._pendingTempValue = null;
     this._initialized = false;
     this._translations = { en: {} };
     this._lang = "en";
+  }
+
+  log(state = 'log', ...data) {
+    if (this._config.debug) {
+      switch (state) {
+        case 'error':
+          console.error(data);
+          break;
+        case 'info':
+          console.info(data);
+          break;
+        default:
+          console.log(data);
+      }
+    }
   }
 
   set hass(hass) {
@@ -18,7 +37,7 @@ class AduroStoveCard extends HTMLElement {
           this._updateContent();
         })
         .catch((e) => {
-          console.error("Failed to load translations", e);
+          log("error", "Failed to load translations", e);
           this._initialize();
           this._updateContent();
         });
@@ -32,8 +51,11 @@ class AduroStoveCard extends HTMLElement {
     if (!config.entity) {
       throw new Error("Please define an entity");
     }
-    this._config = config;
-    console.log("Card configured with entity:", config.entity);
+    for (const key of Object.keys(config)) {
+      this._config[key] = config[key]
+    }
+    this._config.debug &&
+      log("log", "Card configured with entity:", config.entity);
 
     if (this._initialized) {
       this._updateTitle();
@@ -62,9 +84,9 @@ class AduroStoveCard extends HTMLElement {
 
       this._translations = { en: enResp || {}, [tryLang]: localResp || {} };
       this._lang = tryLang;
-      console.info("Aduro Stove Card: translations loaded for", this._lang);
+      log("info", "Aduro Stove Card: translations loaded for", this._lang);
     } catch (e) {
-      console.error("Aduro Stove Card: error loading translations", e);
+      log("error", "Aduro Stove Card: error loading translations", e);
       this._translations = { en: {} };
       this._lang = "en";
     }
@@ -760,9 +782,9 @@ class AduroStoveCard extends HTMLElement {
     const parts = baseEntity.split(".");
     const baseName = parts.length > 1 ? parts[1] : parts[0];
 
-    console.log("Looking for entities matching:", baseName);
+    log("log", "Looking for entities matching:", baseName);
     const matchingEntities = Object.keys(this._hass.states).filter((e) => e.includes(baseName));
-    console.log("All matching entities:", matchingEntities);
+    log("log", "All matching entities:", matchingEntities);
 
     const statusMainEntity = this._hass.states[this._getEntityId("status_main")];
     if (statusMainEntity) {
@@ -809,9 +831,9 @@ class AduroStoveCard extends HTMLElement {
     const coYellowEntity = this._hass.states[this._getEntityId("carbon_monoxide_yellow")];
     const coRedEntity = this._hass.states[this._getEntityId("carbon_monoxide_red")];
 
-    console.log("CO Entity:", coEntity ? coEntity.state : "not found");
-    console.log("CO Yellow Entity:", coYellowEntity ? coYellowEntity.state : "not found");
-    console.log("CO Red Entity:", coRedEntity ? coRedEntity.state : "not found");
+    log("log", "CO Entity:", coEntity ? coEntity.state : "not found");
+    log("log", "CO Yellow Entity:", coYellowEntity ? coYellowEntity.state : "not found");
+    log("log", "CO Red Entity:", coRedEntity ? coRedEntity.state : "not found");
 
     if (coEntity && coYellowEntity && coRedEntity) {
       const coValue = parseFloat(coEntity.state) || 200;
@@ -823,7 +845,7 @@ class AduroStoveCard extends HTMLElement {
       const yellowPos = Math.min((coYellowValue / maxValue) * 100, 100);
       const redPos = Math.min((coRedValue / maxValue) * 100, 100);
 
-      console.log("CO Bar - Green width:", greenWidth, "Yellow pos:", yellowPos, "Red pos:", redPos);
+      log("log", "CO Bar - Green width:", greenWidth, "Yellow pos:", yellowPos, "Red pos:", redPos);
 
       const fillBar = this.shadowRoot.querySelector("#co-bar-fill");
       const yellowMarker = this.shadowRoot.querySelector("#co-marker-yellow");
@@ -849,7 +871,7 @@ class AduroStoveCard extends HTMLElement {
       if (consumptionSubtitle) {
         consumptionSubtitle.textContent = `${consumption} kg ${this._t("since_cleaning")}`;
       }
-      console.log("Consumption since cleaning value:", consumption);
+      log("log", "Consumption since cleaning value:", consumption);
     }
 
     const powerEntity = this._hass.states[this._getEntityId("power")];
