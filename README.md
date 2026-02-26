@@ -77,6 +77,7 @@ debug: false
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
 | `entity` | string | Yes | - | The base entity for your Aduro stove (e.g., `sensor.aduro_h2`) |
+| `title` | string | No | Aduro Stove | The title for the card |
 | `debug` | boolean | No | false | enable debug logging to the console |
 
 ## Requirements
